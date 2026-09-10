@@ -400,15 +400,9 @@
         laidOut.forEach(function (block) {
             const g = svg.append("g");
 
-            g.append("circle")
-                .attr("cx", 4)
-                .attr("cy", block.top + 5)
-                .attr("r", 4.5)
-                .attr("fill", block.grp.color);
-
             const header = g.append("text")
                 .attr("class", "series-label")
-                .attr("x", 15)
+                .attr("x", 0)
                 .attr("y", block.top + 9)
                 .attr("fill", INK);
             header.append("tspan").text(block.grp.name);
