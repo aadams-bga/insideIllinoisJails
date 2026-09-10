@@ -235,7 +235,7 @@
 
     <footer class="graph-footer">
         <div class="footer-note">Illinois Answers was unable to locate coroner records for two deaths.</div>
-        Chart: Andrew Adams, Illinois Answers Project &middot; Source: Illinois Answers Project analysis of state data &middot; <a href="https://cdn.jsdelivr.net/gh/aadams-bga/insideIllinoisJails@main/mannerAndCause.csv" target="_blank" rel="noopener">Download the data</a>
+        Chart: Andrew Adams, Illinois Answers Project &middot; Source: Illinois Answers Project analysis of state data &middot; <a href="https://cdn.jsdelivr.net/gh/aadams-bga/insideIllinoisJails@main/mannerAndCause/mannerAndCause.csv" target="_blank" rel="noopener">Download the data</a>
     </footer>
     <img src="https://raw.githubusercontent.com/aadams-bga/images/bffe8cc967881aeed4fbdee8328f4b2e056159b9/iaplogo.svg" class="iap-logo" alt="Illinois Answers Project logo">
 </div>
@@ -347,7 +347,7 @@
     let groups = null;
     let pinned = null;
 
-    d3.csv("../mannerAndCause.csv", function (d) {
+    d3.csv("mannerAndCause.csv", function (d) {
         const manner = String(d.coroner_manner || "").trim().toLowerCase();
         const cause = String(d.cornoer_cause || "").trim();
         if (!manner) return null;

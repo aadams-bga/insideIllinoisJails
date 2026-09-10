@@ -266,7 +266,7 @@
     </div>
 
     <footer class="graph-footer">
-        Map: Andrew Adams, Illinois Answers Project &middot; Source: Illinois Answers Project analysis of state data &middot; <a href="https://cdn.jsdelivr.net/gh/aadams-bga/insideIllinoisJails@main/regulatoryModels.csv" target="_blank" rel="noopener">Download the data</a>
+        Map: Andrew Adams, Illinois Answers Project &middot; Source: Illinois Answers Project analysis of state data &middot; <a href="https://cdn.jsdelivr.net/gh/aadams-bga/insideIllinoisJails@main/regulatoryModels/regulatoryModels.csv" target="_blank" rel="noopener">Download the data</a>
     </footer>
     <img src="https://raw.githubusercontent.com/aadams-bga/images/bffe8cc967881aeed4fbdee8328f4b2e056159b9/iaplogo.svg" class="iap-logo" alt="Illinois Answers Project logo">
 </div>
@@ -375,7 +375,7 @@
 
     Promise.all([
         d3.json("../geo/us-states-albers.topo.json"),
-        d3.csv("../regulatoryModels.csv")
+        d3.csv("regulatoryModels.csv")
     ]).then(function (results) {
         const topo = results[0];
         states = topojson.feature(topo, topo.objects.states).features;

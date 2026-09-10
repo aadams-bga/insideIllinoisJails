@@ -239,7 +239,7 @@
     </div>
 
     <footer class="graph-footer">
-        Chart: Andrew Adams, Illinois Answers Project &middot; Source: Illinois Answers Project analysis of state data &middot; <a href="https://cdn.jsdelivr.net/gh/aadams-bga/insideIllinoisJails@main/inspectionsSummary.csv" target="_blank" rel="noopener">Download the data</a>
+        Chart: Andrew Adams, Illinois Answers Project &middot; Source: Illinois Answers Project analysis of state data &middot; <a href="https://cdn.jsdelivr.net/gh/aadams-bga/insideIllinoisJails@main/inspectionsSummary/inspectionsSummary.csv" target="_blank" rel="noopener">Download the data</a>
     </footer>
     <img src="https://raw.githubusercontent.com/aadams-bga/images/bffe8cc967881aeed4fbdee8328f4b2e056159b9/iaplogo.svg" class="iap-logo" alt="Illinois Answers Project logo">
 </div>
@@ -356,7 +356,7 @@
 
     let data = null;
 
-    d3.csv("../inspectionsSummary.csv", function (d) {
+    d3.csv("inspectionsSummary.csv", function (d) {
         const raw = String(d.violations_category).trim();
         if (!raw) return null;
         const row = { category: raw, label: LABELS[raw] || raw };

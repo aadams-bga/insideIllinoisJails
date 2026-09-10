@@ -234,7 +234,7 @@
     </div>
 
     <footer class="graph-footer">
-        Chart: Andrew Adams, Illinois Answers Project &middot; Source: Illinois Answers Project analysis of state data &middot; <a href="https://cdn.jsdelivr.net/gh/aadams-bga/insideIllinoisJails@main/pepperballsBar.csv" target="_blank" rel="noopener">Download the data</a>
+        Chart: Andrew Adams, Illinois Answers Project &middot; Source: Illinois Answers Project analysis of state data &middot; <a href="https://cdn.jsdelivr.net/gh/aadams-bga/insideIllinoisJails@main/pepperballsBar/pepperballsBar.csv" target="_blank" rel="noopener">Download the data</a>
     </footer>
     <img src="https://raw.githubusercontent.com/aadams-bga/images/bffe8cc967881aeed4fbdee8328f4b2e056159b9/iaplogo.svg" class="iap-logo" alt="Illinois Answers Project logo">
 </div>
@@ -329,7 +329,7 @@
 
     let data = null;
 
-    d3.csv("../pepperballsBar.csv", function (d) {
+    d3.csv("pepperballsBar.csv", function (d) {
         const label = String(d.jurisdiction).trim();
         const value = num(d["Pepperball use"]);
         if (!label || value === null) return null;
