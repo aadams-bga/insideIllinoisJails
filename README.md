@@ -37,17 +37,6 @@ window.addEventListener("message", function (e) {
 });
 ```
 
-## Local preview
-
-The pages fetch CSVs with `d3.csv`, which the browser blocks over `file://`. Serve the
-directory instead:
-
-```
-python3 -m http.server 8000
-```
-
-Then open `http://localhost:8000/`, which is a contact sheet of all eleven graphics.
-
 ## Basemaps
 
 Both files in `geo/` derive from **U.S. Census Bureau cartographic boundary files**, which are
@@ -58,20 +47,3 @@ to use, modify and redistribute with no attribution requirement.
 |---|---|---|
 | `geo/us-states-albers.topo.json` | 56 states and territories, plus a nation outline | Verbatim copy of [`us-atlas@3`](https://github.com/topojson/us-atlas) `states-albers-10m.json` (ISC license). Pre-projected to Albers USA with Alaska and Hawaii placed as insets, so it draws with a bare `d3.geoPath()` against a `0 0 975 610` viewBox. |
 | `geo/il-counties.topo.json` | 102 Illinois counties, WGS84 | Extracted from [`us-atlas@3`](https://github.com/topojson/us-atlas) `counties-10m.json` by filtering to FIPS prefix `17` and renumbering arcs. Unprojected, drawn with `d3.geoTransverseMercator().rotate([89.5, 0])`. |
-
-## Palette
-
-From `~/dev/JailsDatabase/DESIGN.md` §9.3, which supersedes the raw brand hexes with
-contrast-checked values.
-
-| Role | Hex |
-|---|---|
-| Primary / "something is wrong" | `#8A2C38` maroon |
-| Neutral baseline | `#53646D` steel |
-| Third series | `#C06621` amber |
-| Fourth series | `#353B32` sage |
-| Fifth series / minor category | `#8A827F` neutral |
-| Absent or not applicable | `#D8D2CC` faint |
-
-Color is never the only channel: line charts pair it with stroke weight and direct labels,
-the choropleth pairs it with a hatch fill, and every mark is reachable by tooltip.
