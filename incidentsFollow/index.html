@@ -427,7 +427,7 @@
 
             cfg.series.forEach(function (s) {
                 g.append("path")
-                    .datum(data.map(d => ({ date: d.date, value: d[s.key] })))
+                    .datum(data.map(d => ({ date: d.date, value: d[s.key] })).filter(d => d.value !== null))
                     .attr("fill", "none")
                     .attr("stroke", s.color)
                     .attr("stroke-width", s.width)
