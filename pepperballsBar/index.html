@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Recorded pepperball launcher uses by county</title>
+
+<script src="https://d3js.org/d3.v7.min.js"></script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+    html, body {
+        margin: 0;
+        padding: 0;
+        background-color: transparent;
+    }
+    body {
+        display: block;
+    }
+    #chart-container-wrapper {
+        font-family: "Halyard Text", "halyard-text", "Inter", Arial, sans-serif;
+        max-width: 640px;
+        width: 100%;
+        min-width: 0;
+        margin: 0 auto;
+        position: relative;
+        z-index: 1;
+        background-color: transparent;
+        color: #1F161A;
+        padding: 20px 20px 30px 20px;
+        box-sizing: border-box;
+    }
+
+    #chart-container-wrapper h1 {
+        font-size: 22px;
+        font-weight: 700;
+        margin: 0 0 8px 0;
+        color: #1F161A;
+        line-height: 1.25;
+        letter-spacing: -0.01em;
+    }
+
+    #chart-container-wrapper p.subtitle {
+        font-size: 14px;
+        color: #574F54;
+        line-height: 1.45;
+        margin: 0 0 14px 0;
+        font-weight: 400;
+    }
+
+    #chart-legend {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px 18px;
+        margin-bottom: 12px;
+        font-size: 11.5px;
+        color: #574F54;
+    }
+    #chart-legend .legend-item {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        min-width: 0;
+    }
+    #chart-legend .legend-rule {
+        display: block;
+        width: 22px;
+        flex: 0 0 auto;
+        background: #574F54;
+    }
+    #chart-legend .legend-rule.thin { height: 1px; opacity: 0.45; }
+    #chart-legend .legend-rule.thick { height: 2.5px; }
+    #chart-legend .legend-swatch {
+        display: block;
+        width: 12px;
+        height: 12px;
+        flex: 0 0 auto;
+        border: 1px solid rgba(31, 22, 26, 0.18);
+    }
+    #chart-legend .legend-dot {
+        display: block;
+        width: 11px;
+        height: 11px;
+        border-radius: 50%;
+        flex: 0 0 auto;
+    }
+
+    #chart-container {
+        position: relative;
+        width: 100%;
+        margin: 0 auto;
+        z-index: 10;
+    }
+
+    #chart-svg {
+        display: block;
+        width: 100%;
+        height: auto;
+        overflow: visible;
+    }
+
+    .grid-line {
+        stroke: #DCD4CE;
+        stroke-width: 1px;
+    }
+
+    .axis-label {
+        font-size: 11px;
+        fill: #6E656A;
+        font-family: "Halyard Text", "halyard-text", "Inter", Arial, sans-serif;
+    }
+
+    .axis-line {
+        stroke: #B9B0AB;
+        stroke-width: 1px;
+    }
+
+    .series-label {
+        font-family: "Halyard Text", "halyard-text", "Inter", Arial, sans-serif;
+        font-size: 11.5px;
+        font-weight: 700;
+        line-height: 1.2;
+    }
+
+    .marker-rule {
+        stroke: #1F161A;
+        stroke-width: 1px;
+        stroke-dasharray: 2 3;
+        opacity: 0.65;
+    }
+
+    .hover-rule {
+        stroke: #1F161A;
+        stroke-width: 1px;
+        stroke-dasharray: 3 3;
+        opacity: 0.55;
+    }
+
+    .hover-dot {
+        stroke: #FFFFFF;
+        stroke-width: 1.5px;
+    }
+
+    #chart-tooltip {
+        position: absolute;
+        pointer-events: none;
+        display: none;
+        background-color: #FFFFFF;
+        border: 1px solid #B9B0AB;
+        box-shadow: 3px 3px 0 rgba(31, 22, 26, 0.12);
+        padding: 8px 11px;
+        font-size: 12px;
+        color: #1F161A;
+        z-index: 100;
+        line-height: 1.45;
+        max-width: 240px;
+    }
+    #chart-tooltip .tooltip-header {
+        font-weight: 700;
+        margin-bottom: 4px;
+    }
+    #chart-tooltip .tooltip-row {
+        display: flex;
+        align-items: baseline;
+        gap: 6px;
+        white-space: nowrap;
+    }
+    #chart-tooltip .tooltip-swatch {
+        width: 8px;
+        height: 8px;
+        flex: 0 0 auto;
+    }
+    #chart-tooltip .tooltip-name { color: #574F54; }
+    #chart-tooltip .tooltip-value { font-weight: 700; margin-left: auto; }
+    #chart-tooltip .tooltip-missing { color: #8A827F; font-style: italic; }
+    #chart-tooltip .tooltip-note { color: #574F54; white-space: normal; }
+
+    .graph-footer {
+        margin-top: 22px;
+        padding-top: 12px;
+        border-top: 1px solid #DCD4CE;
+        font-size: 11px;
+        color: #6E656A;
+        line-height: 1.4;
+        position: relative;
+        z-index: 1;
+    }
+    .graph-footer a {
+        color: inherit;
+        text-decoration: underline;
+    }
+
+    .iap-logo {
+        position: absolute;
+        bottom: 10px;
+        right: 10px;
+        width: 150px;
+        opacity: 0.09;
+        z-index: -99999;
+        pointer-events: none;
+    }
+
+    @media (max-width: 500px) {
+        #chart-container-wrapper { padding: 15px 15px 25px 15px; }
+        #chart-container-wrapper h1 { font-size: 18px; }
+        #chart-container-wrapper p.subtitle { font-size: 12.5px; margin-bottom: 12px; }
+        #chart-legend { font-size: 10.5px; gap: 4px 14px; }
+        .graph-footer { font-size: 10px; }
+        .iap-logo { width: 110px; }
+        .axis-label { font-size: 10px; }
+        .series-label { font-size: 10.5px; }
+    }
+
+</style>
+</head>
+<body>
+
+<div id="chart-container-wrapper">
+
+    <h1>Winnebago County reported more than 40% of all uses of pepperball launchers</h1>
+    <p class="subtitle">The northern Illinois county is one of the largest in the state, but outpaces other large counties such as McHenry and Will in its use of the chemical weapon. Cook County, the largest in the state, does not use pepperball launchers at all.</p>
+
+    <div id="chart-wrapper" style="position: relative;">
+        <div id="chart-container">
+            <svg id="chart-svg"></svg>
+        </div>
+        <div id="chart-tooltip"></div>
+    </div>
+
+    <footer class="graph-footer">
+        Chart: Andrew Adams, Illinois Answers Project &middot; Source: Illinois Answers Project analysis of state data &middot; <a href="https://cdn.jsdelivr.net/gh/aadams-bga/insideIllinoisJails@main/pepperballsBar.csv" target="_blank" rel="noopener">Download the data</a>
+    </footer>
+    <img src="https://raw.githubusercontent.com/aadams-bga/images/bffe8cc967881aeed4fbdee8328f4b2e056159b9/iaplogo.svg" class="iap-logo" alt="Illinois Answers Project logo">
+</div>
+
+<script>
+(function () {
+    const MAROON = "#8A2C38";
+    const STEEL = "#53646D";
+    const AMBER = "#C06621";
+    const SAGE = "#353B32";
+    const INK = "#1F161A";
+    const NEUTRAL = "#8A827F";
+    const FAINT = "#D8D2CC";
+
+    const container = d3.select("#chart-container");
+    const svg = d3.select("#chart-svg");
+    const tooltip = d3.select("#chart-tooltip");
+    const wrapperNode = d3.select("#chart-wrapper").node();
+
+    function num(v) {
+        if (v == null) return null;
+        const s = String(v).trim();
+        if (s === "") return null;
+        const n = +s;
+        return Number.isFinite(n) ? n : null;
+    }
+
+    function esc(s) {
+        return String(s == null ? "" : s).replace(/[&<>"]/g, function (c) {
+            return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c];
+        });
+    }
+
+    function placeTooltip(event, width, height) {
+        const node = tooltip.node();
+        const tw = node.offsetWidth;
+        const th = node.offsetHeight;
+        const [px, py] = d3.pointer(event, wrapperNode);
+        let left = px + 16;
+        if (left + tw > width - 4) left = px - tw - 16;
+        if (left < 4) left = 4;
+        let top = py - th / 2;
+        if (top < 4) top = 4;
+        if (top + th > height - 4) top = height - th - 4;
+        tooltip.style("left", left + "px").style("top", top + "px");
+    }
+
+    function placeSeriesLabels(labels, maxY) {
+        labels.sort((a, b) => a.y - b.y);
+        for (let i = 1; i < labels.length; i++) {
+            const prev = labels[i - 1];
+            const minY = prev.y + prev.height / 2 + labels[i].height / 2 + 6;
+            if (labels[i].y < minY) labels[i].y = minY;
+        }
+        if (maxY != null && labels.length) {
+            const last = labels[labels.length - 1];
+            const overflow = last.y + last.height / 2 - maxY;
+            if (overflow > 0) labels.forEach(l => { l.y -= overflow; });
+            const first = labels[0];
+            const under = first.y - first.height / 2;
+            if (under < 0) labels.forEach(l => { l.y -= under; });
+        }
+        return labels;
+    }
+
+    function drawSeriesLabels(g, labels, dx, maxY) {
+        placeSeriesLabels(labels, maxY).forEach(function (l) {
+            if (l.origY != null && Math.abs(l.y - l.origY) > 4) {
+                g.append("line")
+                    .attr("x1", l.x + 2)
+                    .attr("y1", l.origY)
+                    .attr("x2", l.x + dx - 3)
+                    .attr("y2", l.y)
+                    .attr("stroke", l.color)
+                    .attr("stroke-width", 1)
+                    .attr("stroke-opacity", 0.45);
+            }
+            const text = g.append("text")
+                .attr("class", "series-label")
+                .attr("fill", l.color)
+                .attr("y", l.y - (l.height - 13) / 2)
+                .attr("dy", "0.32em");
+            l.lines.forEach(function (t, i) {
+                text.append("tspan")
+                    .attr("x", l.x + dx)
+                    .attr("dy", i === 0 ? 0 : 13)
+                    .text(t);
+            });
+        });
+    }
+
+
+    let data = null;
+
+    d3.csv("../pepperballsBar.csv", function (d) {
+        const label = String(d.jurisdiction).trim();
+        const value = num(d["Pepperball use"]);
+        if (!label || value === null) return null;
+        return { label: label, value: value };
+    }).then(function (rows) {
+        data = rows;
+        render();
+        window.addEventListener("resize", render);
+    });
+
+    function render() {
+        if (!data) return;
+        svg.selectAll("*").remove();
+        const width = container.node().getBoundingClientRect().width;
+        if (!width) return;
+
+        const isMobile = width < 500;
+        const height = isMobile ? 280 : 340;
+        const margin = { top: 20, right: 6, bottom: 44, left: isMobile ? 26 : 32 };
+        const innerWidth = width - margin.left - margin.right;
+        const innerHeight = height - margin.top - margin.bottom;
+
+        svg.attr("width", width)
+            .attr("height", height)
+            .attr("viewBox", "0 0 " + width + " " + height)
+            .attr("preserveAspectRatio", "xMinYMin meet");
+
+        const x = d3.scaleBand()
+            .domain(data.map(d => d.label))
+            .range([0, innerWidth])
+            .padding(0.3);
+
+        const y = d3.scaleLinear()
+            .domain([0, d3.max(data, d => d.value)])
+            .range([innerHeight, 0])
+            .nice();
+
+        const g = svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+        const yTicks = y.ticks(5);
+        g.selectAll(".grid-line")
+            .data(yTicks)
+            .enter()
+            .append("line")
+            .attr("class", "grid-line")
+            .attr("x1", 0)
+            .attr("x2", innerWidth)
+            .attr("y1", d => y(d))
+            .attr("y2", d => y(d));
+
+        g.selectAll(".y-label")
+            .data(yTicks)
+            .enter()
+            .append("text")
+            .attr("class", "axis-label")
+            .attr("x", -8)
+            .attr("y", d => y(d))
+            .attr("dy", "0.32em")
+            .attr("text-anchor", "end")
+            .text(d => d);
+
+        const bars = g.selectAll(".bar-group")
+            .data(data)
+            .enter()
+            .append("g");
+
+        bars.append("rect")
+            .attr("x", d => x(d.label))
+            .attr("y", d => y(d.value))
+            .attr("width", x.bandwidth())
+            .attr("height", d => innerHeight - y(d.value))
+            .attr("fill", MAROON);
+
+        bars.append("text")
+            .attr("class", "series-label")
+            .attr("fill", MAROON)
+            .attr("x", d => x(d.label) + x.bandwidth() / 2)
+            .attr("y", d => y(d.value) - 7)
+            .attr("text-anchor", "middle")
+            .text(d => d.value);
+
+        bars.each(function (d) {
+            const parts = d.label.split(" ");
+            const text = d3.select(this).append("text")
+                .attr("class", "axis-label")
+                .attr("text-anchor", "middle")
+                .attr("y", innerHeight + 16);
+            parts.forEach(function (t, i) {
+                text.append("tspan")
+                    .attr("x", x(d.label) + x.bandwidth() / 2)
+                    .attr("dy", i === 0 ? 0 : 12)
+                    .text(t);
+            });
+        });
+
+        g.append("line").attr("class", "axis-line").attr("x1", 0).attr("x2", innerWidth).attr("y1", innerHeight).attr("y2", innerHeight);
+
+        bars.append("rect")
+            .attr("x", d => x(d.label))
+            .attr("y", 0)
+            .attr("width", x.bandwidth())
+            .attr("height", innerHeight)
+            .attr("fill", "transparent")
+            .on("mouseenter mousemove", function (event, d) {
+                const total = d3.sum(data, r => r.value);
+                let html = '<div class="tooltip-header">' + esc(d.label) + "</div>";
+                html += '<div class="tooltip-row"><span class="tooltip-name">Recorded uses</span><span class="tooltip-value">' + d.value + "</span></div>";
+                html += '<div class="tooltip-row"><span class="tooltip-name">Share of all uses</span><span class="tooltip-value">' + d3.format(".0%")(d.value / total) + "</span></div>";
+                tooltip.style("display", "block").html(html);
+                placeTooltip(event, width, height);
+            })
+            .on("mouseleave", function () { tooltip.style("display", "none"); });
+    }
+
+
+    (function () {
+        if (window.parent === window) return;
+        let last = 0;
+        function send() {
+            const h = Math.ceil(document.documentElement.getBoundingClientRect().height);
+            if (!h || Math.abs(h - last) < 2) return;
+            last = h;
+            window.parent.postMessage({ type: "iap-graphic-height", id: "pepperballsBar", height: h }, "*");
+        }
+        window.addEventListener("load", send);
+        window.addEventListener("resize", send);
+        if (window.ResizeObserver) new ResizeObserver(send).observe(document.body);
+        setTimeout(send, 300);
+        setTimeout(send, 1200);
+    })();
+})();
+</script>
+</body>
+</html>
