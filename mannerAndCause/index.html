@@ -192,6 +192,9 @@
         color: inherit;
         text-decoration: underline;
     }
+    .graph-footer .footer-note {
+        margin-bottom: 5px;
+    }
 
     .iap-logo {
         position: absolute;
@@ -231,6 +234,7 @@
     </div>
 
     <footer class="graph-footer">
+        <div class="footer-note">Illinois Answers was unable to locate coroner records for two deaths.</div>
         Chart: Andrew Adams, Illinois Answers Project &middot; Source: Illinois Answers Project analysis of state data &middot; <a href="https://cdn.jsdelivr.net/gh/aadams-bga/insideIllinoisJails@main/mannerAndCause.csv" target="_blank" rel="noopener">Download the data</a>
     </footer>
     <img src="https://raw.githubusercontent.com/aadams-bga/images/bffe8cc967881aeed4fbdee8328f4b2e056159b9/iaplogo.svg" class="iap-logo" alt="Illinois Answers Project logo">
@@ -324,22 +328,20 @@
     }
 
 
-    const ORDER = ["natural", "suicide", "accident", "homicide", "undetermined", "data unavailable"];
+    const ORDER = ["natural", "suicide", "accident", "homicide", "undetermined"];
     const COLORS = {
         "natural": STEEL,
         "suicide": MAROON,
         "accident": AMBER,
         "homicide": SAGE,
-        "undetermined": NEUTRAL,
-        "data unavailable": FAINT
+        "undetermined": NEUTRAL
     };
     const NAMES = {
         "natural": "Natural",
         "suicide": "Suicide",
         "accident": "Accident",
         "homicide": "Homicide",
-        "undetermined": "Undetermined",
-        "data unavailable": "Not recorded"
+        "undetermined": "Undetermined"
     };
 
     let groups = null;
