@@ -23,7 +23,6 @@ html, body { margin: 0; padding: 0; background-color: transparent; }
     --steel: #6F8590;
     --sage: #788570;
     --rule: 2px solid var(--ink);
-    --shadow: 4px 4px 0 var(--ink);
     --sans: "halyard-display", "Halyard Display", "Inter", ui-sans-serif, "Helvetica Neue", Arial, sans-serif;
     --sans-sm: "halyard-text", "Halyard Text", "Inter", ui-sans-serif, "Helvetica Neue", Arial, sans-serif;
     --t-micro: .6875rem;
@@ -75,9 +74,9 @@ html, body { margin: 0; padding: 0; background-color: transparent; }
 #iap-custody-dots .ds-key .key.has-story { box-shadow: 0 0 0 1.8px var(--ground), 0 0 0 3.1px var(--ink); }
 #iap-custody-dots .dots-wrap {
     position: relative;
-    max-width: 23.75rem;
+    max-width: 24.875rem;
     margin-inline: auto;
-    padding-left: 34px;
+    padding-left: 52px;
 }
 #iap-custody-dots .dots {
     display: grid;
@@ -144,8 +143,8 @@ html, body { margin: 0; padding: 0; background-color: transparent; }
     width: min(17.5rem, 100%);
     background: var(--parchment);
     border: var(--rule);
-    box-shadow: var(--shadow);
-    padding: .75rem .8rem .8rem;
+    border-radius: 14px;
+    padding: .85rem .9rem .9rem;
     text-align: left;
 }
 #iap-custody-dots .dot-pop[hidden] { display: none; }
@@ -199,13 +198,6 @@ html, body { margin: 0; padding: 0; background-color: transparent; }
     margin: -.25rem 0 .5rem;
 }
 #iap-custody-dots .dot-pop-credit[hidden] { display: none; }
-#iap-custody-dots .faces-c {
-    display: block;
-    font-family: var(--sans-sm);
-    font-size: var(--t-micro);
-    color: var(--ink-muted);
-    margin-top: .15rem;
-}
 #iap-custody-dots .suppression-note {
     font-family: var(--sans-sm);
     font-size: var(--t-small);
@@ -216,9 +208,10 @@ html, body { margin: 0; padding: 0; background-color: transparent; }
 #iap-custody-dots .suppression-note[hidden] { display: none; }
 #iap-custody-dots .dot-pop-photo {
     display: block;
-    width: 3.5rem;
+    width: 8rem;
     aspect-ratio: 4 / 5;
     object-fit: cover;
+    border-radius: 8px;
     margin: 0 0 .5rem;
     background: rgba(31, 22, 26, .07);
 }
@@ -237,58 +230,6 @@ html, body { margin: 0; padding: 0; background-color: transparent; }
     font-family: var(--sans);
 }
 #iap-custody-dots .dot-pop-close:hover { color: var(--ink); }
-#iap-custody-dots .faces-block {
-    margin-top: 1.5rem;
-    padding-top: 1.25rem;
-    border-top: 1px solid rgba(31, 22, 26, .25);
-}
-#iap-custody-dots .faces-lede {
-    font-family: var(--sans-sm);
-    font-size: var(--t-small);
-    color: var(--ink-muted);
-    margin: 0 0 .9rem;
-}
-#iap-custody-dots .faces {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    display: grid;
-    gap: 1.1rem .9rem;
-    grid-template-columns: repeat(auto-fill, minmax(6.5rem, 1fr));
-}
-#iap-custody-dots .faces li { text-align: center; }
-#iap-custody-dots .faces img {
-    width: 100%;
-    max-width: 6.5rem;
-    aspect-ratio: 4 / 5;
-    object-fit: cover;
-    display: block;
-    margin: 0 auto .45rem;
-    background: rgba(31, 22, 26, .07);
-}
-#iap-custody-dots .faces-n {
-    display: block;
-    font-family: var(--sans);
-    font-weight: 600;
-    font-size: var(--t-small);
-    line-height: 1.25;
-}
-#iap-custody-dots .faces-m {
-    display: block;
-    font-family: var(--sans-sm);
-    font-size: var(--t-micro);
-    color: var(--ink-muted);
-    margin-top: .15rem;
-}
-#iap-custody-dots .graph-footer {
-    margin-top: 22px;
-    padding-top: 12px;
-    border-top: 1px solid #DCD4CE;
-    font-size: 11px;
-    color: #6E656A;
-    line-height: 1.4;
-}
-#iap-custody-dots .graph-footer a { color: inherit; text-decoration: underline; }
 #iap-custody-dots .sr {
     position: absolute;
     width: 1px;
@@ -304,12 +245,11 @@ html, body { margin: 0; padding: 0; background-color: transparent; }
     #iap-custody-dots { padding: 15px 15px 25px 15px; }
     #iap-custody-dots h1 { font-size: 18px; }
     #iap-custody-dots p.dek { font-size: 12.5px; margin-bottom: 14px; }
-    #iap-custody-dots .graph-footer { font-size: 10px; }
 }
 </style>
 
-<h1>More than 230 people died in Illinois county jails between 2019 and 2025</h1>
-<p class="dek">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo.</p>
+<h1>More than one in four people who died in Illinois county jails between 2019 and 2025 were not counted in state data</h1>
+<p class="dek">Click a dot to learn more about individuals who died in jail custody.</p>
 
 <p class="ds-key"></p>
 
@@ -328,15 +268,6 @@ html, body { margin: 0; padding: 0; background-color: transparent; }
 </div>
 
 <p class="suppression-note" hidden></p>
-
-<div class="faces-block" hidden>
-    <p class="faces-lede"></p>
-    <ul class="faces"></ul>
-</div>
-
-<footer class="graph-footer">
-    Chart: Andrew Adams, Illinois Answers Project &middot; Source: Illinois Answers Project analysis of state data &middot; <a href="https://cdn.jsdelivr.net/gh/aadams-bga/insideIllinoisJails@main/inCustodyDeaths/inCustodyDeaths.csv" target="_blank" rel="noopener">Download the data</a>
-</footer>
 
 <script>
 (function () {
@@ -508,45 +439,6 @@ html, body { margin: 0; padding: 0; background-color: transparent; }
             wrap.appendChild(s);
         });
 
-        var faces = dots.filter(function (d) { return d.photo; });
-        if (faces.length) {
-            var block = root.querySelector(".faces-block");
-            block.hidden = false;
-            block.querySelector(".faces-lede").textContent = faces.length === 1
-                ? "One of them, in a photograph shared with Illinois Answers Project."
-                : faces.length + " of them, in photographs shared with Illinois Answers Project.";
-            var ul = block.querySelector(".faces");
-            faces.forEach(function (d) {
-                var li = document.createElement("li");
-                var img = document.createElement("img");
-                img.src = d.photo;
-                img.loading = "lazy";
-                img.width = 120;
-                img.height = 120;
-                img.alt = (d.name || "A person") + ", who died in the " + d.county + " County jail";
-                img.addEventListener("error", function () {
-                    li.remove();
-                    if (!ul.querySelector("li")) block.hidden = true;
-                });
-                var n = document.createElement("span");
-                n.className = "faces-n";
-                n.textContent = d.name || (d.county + " County");
-                var m = document.createElement("span");
-                m.className = "faces-m";
-                m.textContent = [d.age || null, d.county ? d.county + " County" : null, d.year].filter(Boolean).join(" \u00b7 ");
-                li.appendChild(img);
-                li.appendChild(n);
-                li.appendChild(m);
-                if (d.credit) {
-                    var cr = document.createElement("span");
-                    cr.className = "faces-c";
-                    cr.textContent = d.credit;
-                    li.appendChild(cr);
-                }
-                ul.appendChild(li);
-            });
-        }
-
         wire(wrap, grid);
     }
 
@@ -635,7 +527,7 @@ html, body { margin: 0; padding: 0; background-color: transparent; }
             pop.style.left = left + "px";
             pop.style.top = (above ? cy - ph - 10 : cy + db.height + 10) + "px";
 
-            arrow.style.left = Math.max(8, Math.min(cx - left - 5, pw - 18)) + "px";
+            arrow.style.left = Math.max(18, Math.min(cx - left - 5, pw - 27)) + "px";
             arrow.style.top = above ? (ph - 5) + "px" : "-5px";
             arrow.style.transform = above ? "rotate(225deg)" : "rotate(45deg)";
         }
