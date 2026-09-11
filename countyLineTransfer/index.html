@@ -99,10 +99,23 @@
         stroke-linejoin: round;
     }
     .county.involved { fill: #CDC4BD; }
+    .county.out-of-state {
+        stroke: #FFFFFF;
+        stroke-width: 2.6px;
+    }
     .state-outline {
         fill: none;
-        stroke: #B9B0AB;
-        stroke-width: 1.2px;
+        stroke: #1F161A;
+        stroke-width: 1.5px;
+        stroke-linejoin: round;
+    }
+    .state-name {
+        font-family: "Halyard Text", "halyard-text", "Inter", Arial, sans-serif;
+        font-size: 9.5px;
+        font-weight: 600;
+        letter-spacing: 0.16em;
+        fill: #8A827F;
+        pointer-events: none;
     }
     .flow {
         fill: none;
@@ -212,6 +225,11 @@
         "St. Louis|Missouri": "29510",
         "Warrick|Indiana": "18173"
     };
+
+    const NEIGHBOR_NAMES = [
+        { text: "MISSOURI", coords: [-91.12, 38.42] },
+        { text: "INDIANA", coords: [-87.22, 39.55] }
+    ];
 
     const OUT_OF_STATE_LABEL = {
         "29189": "St. Louis County, Mo.",
@@ -358,10 +376,26 @@
             .data(counties)
             .enter()
             .append("path")
-            .attr("class", d => "county" + (involved.has(d.properties.fips) ? " involved" : ""))
-            .attr("d", path);
+            .attr("class", d => "county"
+                + (involved.has(d.properties.fips) ? " involved" : "")
+                + (d.properties.fips.startsWith("17") ? "" : " out-of-state"))
+            .attr("d", path)
+            .filter(d => !d.properties.fips.startsWith("17"))
+            .raise();
 
         svg.append("path").attr("class", "state-outline").attr("d", path(illinois));
+
+        const stateNames = svg.append("g");
+        NEIGHBOR_NAMES.forEach(function (nm) {
+            const xy = projection(nm.coords);
+            if (!xy) return;
+            stateNames.append("text")
+                .attr("class", "state-name")
+                .attr("x", xy[0])
+                .attr("y", xy[1])
+                .attr("text-anchor", "middle")
+                .text(nm.text);
+        });
 
         const maxPeople = d3.max(flows, f => f.people);
         const widthScale = d3.scaleSqrt().domain([1, maxPeople]).range([1.6, 5]);
