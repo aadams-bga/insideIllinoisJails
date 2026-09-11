@@ -101,7 +101,7 @@
     .county.involved { fill: #CDC4BD; }
     .county.out-of-state {
         stroke: #FFFFFF;
-        stroke-width: 2.6px;
+        stroke-width: 1.5px;
     }
     .state-outline {
         fill: none;
@@ -228,7 +228,7 @@
 
     const NEIGHBOR_NAMES = [
         { text: "MISSOURI", coords: [-91.12, 38.42] },
-        { text: "INDIANA", coords: [-87.22, 39.55] }
+        { text: "INDIANA", anchorFips: "18173", above: 7 }
     ];
 
     const OUT_OF_STATE_LABEL = {
@@ -387,7 +387,15 @@
 
         const stateNames = svg.append("g");
         NEIGHBOR_NAMES.forEach(function (nm) {
-            const xy = projection(nm.coords);
+            let xy;
+            if (nm.anchorFips) {
+                const anchor = counties.find(c => c.properties.fips === nm.anchorFips);
+                if (!anchor) return;
+                const box = path.bounds(anchor);
+                xy = [(box[0][0] + box[1][0]) / 2, box[0][1] - nm.above];
+            } else {
+                xy = projection(nm.coords);
+            }
             if (!xy) return;
             stateNames.append("text")
                 .attr("class", "state-name")
