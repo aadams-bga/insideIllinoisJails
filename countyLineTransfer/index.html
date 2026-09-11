@@ -94,22 +94,44 @@
     .flow {
         fill: none;
         stroke-linecap: round;
-        stroke-width: 1.6px;
-        opacity: 0.9;
+        stroke: #574F54;
+        opacity: 0.85;
+        transition: opacity .12s ease;
     }
-    .flow-head { stroke: none; }
-    .place-label {
-        font-family: "Halyard Text", "halyard-text", "Inter", Arial, sans-serif;
-        font-size: 9.5px;
-        font-weight: 600;
-        fill: #1F161A;
-        paint-order: stroke;
-        stroke: #FFFFFF;
-        stroke-width: 2.6px;
-        stroke-linejoin: round;
+    .flow-head {
+        stroke: none;
+        fill: #574F54;
+        opacity: 0.85;
+        transition: opacity .12s ease;
+    }
+    .flow-hit {
+        fill: none;
+        stroke: transparent;
+        stroke-width: 16px;
+        cursor: default;
+        pointer-events: stroke;
+    }
+    .dim .flow, .dim .flow-head { opacity: 0.18; }
+    .dim .is-active .flow, .dim .is-active .flow-head { opacity: 1; }
+    #chart-tooltip {
+        position: absolute;
         pointer-events: none;
+        display: none;
+        background-color: #FFFFFF;
+        border: 1px solid #B9B0AB;
+        border-radius: 5px;
+        padding: 8px 11px;
+        font-size: 12px;
+        color: #1F161A;
+        z-index: 100;
+        line-height: 1.45;
+        max-width: 230px;
     }
-    .place-label.out { font-style: italic; fill: #574F54; }
+    #chart-tooltip .tooltip-header {
+        font-weight: 700;
+        margin-bottom: 3px;
+    }
+    #chart-tooltip .tooltip-body { color: #574F54; }
     .graph-footer {
         margin-top: 22px;
         padding-top: 12px;
@@ -147,14 +169,16 @@
     <p class="subtitle">At least 18 people were moved across county lines before they died in jail custody between 2019 and 2025. A disproportionate number of these people, twelve of them, were not counted in state oversight data after they died.</p>
 
     <div id="chart-legend">
-        <span class="legend-item"><span class="legend-rule" style="background:#8A2C38"></span>Not counted in state data</span>
-        <span class="legend-item"><span class="legend-rule" style="background:#53646D"></span>Counted in state data</span>
+        <span class="legend-item"><span class="legend-rule" style="background:#574F54;height:1.6px"></span>One person moved</span>
+        <span class="legend-item"><span class="legend-rule" style="background:#574F54;height:5px"></span>Three people moved</span>
+        <span class="legend-item">Hover a line for detail</span>
     </div>
 
     <div id="chart-wrapper" style="position: relative;">
         <div id="chart-container">
             <svg id="chart-svg"></svg>
         </div>
+        <div id="chart-tooltip"></div>
     </div>
 
     <footer class="graph-footer">
@@ -182,6 +206,11 @@
 
     const container = d3.select("#chart-container");
     const svg = d3.select("#chart-svg");
+
+    function placeName(f) {
+        const fips = f.properties.fips;
+        return OUT_OF_STATE_LABEL[fips] || f.properties.name + " County";
+    }
 
     let counties = null;
     let illinois = null;
@@ -222,11 +251,15 @@
             };
         }).filter(Boolean);
 
-        const groups = d3.group(rows, d => d.from.properties.fips + ">" + d.to.properties.fips);
+        const grouped = d3.group(rows, d => d.from.properties.fips + ">" + d.to.properties.fips);
         flows = [];
-        groups.forEach(function (list) {
-            list.forEach(function (d, i) {
-                flows.push(Object.assign({}, d, { index: i, of: list.length }));
+        grouped.forEach(function (list) {
+            flows.push({
+                from: list[0].from,
+                to: list[0].to,
+                people: list.length,
+                counted: list.filter(d => d.counted).length,
+                uncounted: list.filter(d => !d.counted).length
             });
         });
 
@@ -271,102 +304,110 @@
 
         svg.append("path").attr("class", "state-outline").attr("d", path(illinois));
 
-        const flowG = svg.append("g");
+        const maxPeople = d3.max(flows, f => f.people);
+        const widthScale = d3.scaleSqrt().domain([1, maxPeople]).range([1.6, 5]);
 
+        const bearings = new Map();
+        function fan(key, angle) {
+            if (!bearings.has(key)) bearings.set(key, []);
+            bearings.get(key).push(angle);
+        }
         flows.forEach(function (f) {
             const a = path.centroid(f.from);
             const b = path.centroid(f.to);
-            const dx = b[0] - a[0];
-            const dy = b[1] - a[1];
+            f.a = a;
+            f.b = b;
+            f.outAngle = Math.atan2(b[1] - a[1], b[0] - a[0]);
+            f.inAngle = Math.atan2(a[1] - b[1], a[0] - b[0]);
+            fan("f" + f.from.properties.fips, f.outAngle);
+            fan("t" + f.to.properties.fips, f.inAngle);
+        });
+
+        function spread(key, angle) {
+            const list = bearings.get(key);
+            if (!list || list.length < 2) return angle;
+            const sorted = list.slice().sort(d3.ascending);
+            const i = sorted.indexOf(angle);
+            return angle + (i - (sorted.length - 1) / 2) * 0.34;
+        }
+
+        const flowG = svg.append("g");
+        const tooltip = d3.select("#chart-tooltip");
+        const wrapperNode = d3.select("#chart-wrapper").node();
+
+        flows.forEach(function (f) {
+            const w = widthScale(f.people);
+            const rawLen = Math.hypot(f.b[0] - f.a[0], f.b[1] - f.a[1]) || 1;
+            let ra = 7 + w;
+            let rb = 11 + w;
+            const need = ra + rb + 14;
+            if (rawLen < need) {
+                const k = Math.max(0.2, rawLen / need);
+                ra *= k;
+                rb *= k;
+            }
+            const oa = spread("f" + f.from.properties.fips, f.outAngle);
+            const ob = spread("t" + f.to.properties.fips, f.inAngle);
+
+            const p0 = [f.a[0] + Math.cos(oa) * ra, f.a[1] + Math.sin(oa) * ra];
+            const p1 = [f.b[0] + Math.cos(ob) * rb, f.b[1] + Math.sin(ob) * rb];
+
+            const dx = p1[0] - p0[0];
+            const dy = p1[1] - p0[1];
             const len = Math.hypot(dx, dy) || 1;
-            const ux = dx / len;
-            const uy = dy / len;
-
-            const trimStart = 5;
-            const trimEnd = 7;
-            const p0 = [a[0] + ux * trimStart, a[1] + uy * trimStart];
-            const p1 = [b[0] - ux * trimEnd, b[1] - uy * trimEnd];
-
-            const spread = (f.index - (f.of - 1) / 2) * 9;
-            const bow = len * 0.17 + spread;
+            const bow = len * 0.15;
             const mx = (p0[0] + p1[0]) / 2;
             const my = (p0[1] + p1[1]) / 2;
-            const c = [mx + -uy * bow, my + ux * bow];
+            const c = [mx + -(dy / len) * bow, my + (dx / len) * bow];
 
-            const color = f.counted ? STEEL : MAROON;
+            const d = "M" + p0[0] + "," + p0[1] + " Q" + c[0] + "," + c[1] + " " + p1[0] + "," + p1[1];
+            const g = flowG.append("g");
 
-            flowG.append("path")
-                .attr("class", "flow")
-                .attr("stroke", color)
-                .attr("d", "M" + p0[0] + "," + p0[1] + " Q" + c[0] + "," + c[1] + " " + p1[0] + "," + p1[1]);
+            g.append("path").attr("class", "flow").attr("stroke-width", w).attr("d", d);
 
             const angle = Math.atan2(p1[1] - c[1], p1[0] - c[0]);
-            const size = 5.2;
+            const size = Math.min(4.6 + w, Math.max(4, len * 0.42));
             const pts = [
                 [p1[0], p1[1]],
                 [p1[0] - size * Math.cos(angle - 0.42), p1[1] - size * Math.sin(angle - 0.42)],
                 [p1[0] - size * Math.cos(angle + 0.42), p1[1] - size * Math.sin(angle + 0.42)]
             ];
-            flowG.append("polygon")
-                .attr("class", "flow-head")
-                .attr("fill", color)
-                .attr("points", pts.map(p => p.join(",")).join(" "));
+            g.append("polygon").attr("class", "flow-head").attr("points", pts.map(q => q.join(",")).join(" "));
+
+            g.append("path")
+                .attr("class", "flow-hit")
+                .attr("d", d)
+                .on("mouseenter mousemove", function (event) {
+                    flowG.classed("dim", true);
+                    flowG.selectAll("g").classed("is-active", false);
+                    g.classed("is-active", true);
+                    const people = f.people === 1 ? "1 person" : f.people + " people";
+                    let html = '<div class="tooltip-header">' + placeName(f.from) + " &rarr; " + placeName(f.to) + "</div>";
+                    html += '<div class="tooltip-body">' + people + " moved before dying in custody";
+                    if (f.uncounted > 0) html += "<br>" + f.uncounted + " not counted in state data";
+                    if (f.counted > 0) html += "<br>" + f.counted + " counted in state data";
+                    html += "</div>";
+                    tooltip.style("display", "block").html(html);
+
+                    const node = tooltip.node();
+                    const tw = node.offsetWidth;
+                    const th = node.offsetHeight;
+                    const pt = d3.pointer(event, wrapperNode);
+                    let left = pt[0] + 16;
+                    if (left + tw > width - 4) left = pt[0] - tw - 16;
+                    if (left < 4) left = 4;
+                    let top = pt[1] - th / 2;
+                    if (top < 4) top = 4;
+                    if (top + th > height - 4) top = height - th - 4;
+                    tooltip.style("left", left + "px").style("top", top + "px");
+                })
+                .on("mouseleave", function () {
+                    flowG.classed("dim", false);
+                    flowG.selectAll("g").classed("is-active", false);
+                    tooltip.style("display", "none");
+                });
         });
 
-        const destinations = new Set(flows.map(f => f.to.properties.fips));
-        const weight = new Map();
-        flows.forEach(function (f) {
-            const k = f.to.properties.fips;
-            weight.set(k, (weight.get(k) || 0) + 1);
-        });
-
-        const labels = [];
-        involved.forEach(function (fips) {
-            const f = counties.find(c => c.properties.fips === fips);
-            if (!f) return;
-            const c = path.centroid(f);
-            const out = !fips.startsWith("17");
-            labels.push({
-                x: c[0],
-                y: c[1],
-                text: OUT_OF_STATE_LABEL[fips] || f.properties.name,
-                out: out,
-                rank: (out ? 0 : 1) + (destinations.has(fips) ? 0 : 2) - (weight.get(fips) || 0) * 0.1
-            });
-        });
-
-        const placed = [];
-        const labelG = svg.append("g");
-        const nudges = [0, -11, 11, -21, 21, -31, 31];
-
-        labels.sort((a, b) => a.rank - b.rank || a.y - b.y).forEach(function (l) {
-            const w = l.text.length * (isMobile ? 4.3 : 4.9) + 4;
-            const h = 11;
-            for (let i = 0; i < nudges.length; i++) {
-                const y = l.y + nudges[i];
-                const box = { x0: l.x - w / 2, x1: l.x + w / 2, y0: y - h / 2, y1: y + h / 2 };
-                const hit = placed.some(p => !(box.x1 < p.x0 || box.x0 > p.x1 || box.y1 < p.y0 || box.y0 > p.y1));
-                if (hit) continue;
-                placed.push(box);
-                labelG.append("text")
-                    .attr("class", "place-label" + (l.out ? " out" : ""))
-                    .attr("x", l.x)
-                    .attr("y", y)
-                    .attr("dy", "0.32em")
-                    .attr("text-anchor", "middle")
-                    .text(l.text);
-                if (nudges[i] !== 0) {
-                    labelG.append("line")
-                        .attr("x1", l.x)
-                        .attr("y1", l.y)
-                        .attr("x2", l.x)
-                        .attr("y2", y - (nudges[i] > 0 ? 5 : -5))
-                        .attr("stroke", "#8A827F")
-                        .attr("stroke-width", 0.7);
-                }
-                return;
-            }
-        });
     }
 
     (function () {
