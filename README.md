@@ -11,6 +11,7 @@
 - [inspectionMap](https://aadams-bga.github.io/insideIllinoisJails/inspectionMap/)
 - [inCustodyDeaths](https://aadams-bga.github.io/insideIllinoisJails/inCustodyDeaths/)
 - [countyLineTransfer](https://aadams-bga.github.io/insideIllinoisJails/countyLineTransfer/)
+- [pepperballScroll](https://aadams-bga.github.io/insideIllinoisJails/pepperballScroll/)
 
 ```html
 <iframe
@@ -47,5 +48,5 @@
 <iframe id="pepperballMap"       src="https://aadams-bga.github.io/insideIllinoisJails/pepperballMap/"       height="800" loading="lazy" scrolling="no" frameborder="0" style="display:block;width:100%;border:0;overflow:hidden"></iframe>
 <iframe id="inspectionMap"       src="https://aadams-bga.github.io/insideIllinoisJails/inspectionMap/"       height="794" loading="lazy" scrolling="no" frameborder="0" style="display:block;width:100%;border:0;overflow:hidden"></iframe>
 <iframe id="inCustodyDeaths"     src="https://aadams-bga.github.io/insideIllinoisJails/inCustodyDeaths/"     height="809" loading="lazy" scrolling="no" frameborder="0" style="display:block;width:100%;border:0;overflow:hidden"></iframe>
-<iframe id="countyLineTransfer"  src="https://aadams-bga.github.io/insideIllinoisJails/countyLineTransfer/"  height="940" loading="lazy" scrolling="no" frameborder="0" style="display:block;width:100%;border:0;overflow:hidden"></iframe>
+<iframe id="countyLineTransfer"  src="https://aadams-bga.github.io/insideIllinoisJails/countyLineTransfer/"  height="924" loading="lazy" scrolling="no" frameborder="0" style="display:block;width:100%;border:0;overflow:hidden"></iframe>
 ```

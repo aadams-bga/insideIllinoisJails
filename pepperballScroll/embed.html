@@ -1,0 +1,357 @@
+<div id="iap-pepperball-scroll" data-csv="https://cdn.jsdelivr.net/gh/aadams-bga/insideIllinoisJails@main/pepperballScroll/pepperballScroll.csv">
+<style>
+#iap-pepperball-scroll {
+    --navy: #14243F;
+    --ground: var(--navy);
+    --rule: rgba(255, 255, 255, 0.22);
+    --year: rgba(255, 255, 255, 0.5);
+    --accent: #C86B77;
+    --card-bg: rgba(255, 255, 255, 0.055);
+    --card-border: rgba(255, 255, 255, 0.14);
+    --card-text: rgba(255, 255, 255, 0.9);
+    --kicker: rgba(255, 255, 255, 0.62);
+    --aside: rgba(255, 255, 255, 0.62);
+    --sans: "halyard-display", "Halyard Display", "Inter", ui-sans-serif, "Helvetica Neue", Arial, sans-serif;
+    --sans-sm: "halyard-text", "Halyard Text", "Inter", ui-sans-serif, "Helvetica Neue", Arial, sans-serif;
+    background: var(--ground);
+    color: var(--card-text);
+    font-family: var(--sans-sm);
+    -webkit-font-smoothing: antialiased;
+    padding: 34px 20px 40px 20px;
+    box-sizing: border-box;
+}
+#iap-pepperball-scroll.light {
+    --ground: transparent;
+    --rule: #DCD4CE;
+    --year: #6E656A;
+    --accent: #8A2C38;
+    --card-bg: #FFFFFF;
+    --card-border: #DCD4CE;
+    --card-text: #1F161A;
+    --kicker: #574F54;
+    --aside: #574F54;
+}
+#iap-pepperball-scroll *, #iap-pepperball-scroll *::before, #iap-pepperball-scroll *::after { box-sizing: border-box; }
+#iap-pepperball-scroll .tl {
+    position: relative;
+    display: flex;
+    max-width: 720px;
+    margin: 0 auto;
+}
+#iap-pepperball-scroll .tl-rail {
+    position: relative;
+    flex: 0 0 auto;
+    width: 66px;
+}
+#iap-pepperball-scroll .tl-line {
+    position: absolute;
+    right: 0;
+    width: 2px;
+    background: var(--rule);
+}
+#iap-pepperball-scroll .tl-year {
+    position: absolute;
+    right: 12px;
+    transform: translateY(-50%);
+    font-family: var(--sans-sm);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    color: var(--year);
+    white-space: nowrap;
+}
+#iap-pepperball-scroll .tl-tick {
+    position: absolute;
+    right: 0;
+    width: 8px;
+    height: 1px;
+    background: var(--rule);
+}
+#iap-pepperball-scroll .tl-dot {
+    position: absolute;
+    right: -4px;
+    width: 10px;
+    height: 10px;
+    margin-top: -5px;
+    border-radius: 50%;
+    background: var(--accent);
+}
+#iap-pepperball-scroll .tl-links {
+    position: absolute;
+    left: 0;
+    top: 0;
+    pointer-events: none;
+    overflow: visible;
+}
+#iap-pepperball-scroll .tl-cards {
+    flex: 1 1 auto;
+    min-width: 0;
+    padding-left: 58px;
+}
+#iap-pepperball-scroll .tl-links path { stroke-opacity: 0.62; }
+#iap-pepperball-scroll .tl-card {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 5px;
+    padding: 15px 17px 16px;
+    margin-bottom: 58px;
+}
+#iap-pepperball-scroll .tl-card:last-child { margin-bottom: 0; }
+#iap-pepperball-scroll .tl-kicker {
+    display: block;
+    font-family: var(--sans-sm);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 7px;
+}
+#iap-pepperball-scroll .tl-copy {
+    font-size: 15px;
+    line-height: 1.55;
+    margin: 0;
+    color: var(--card-text);
+}
+#iap-pepperball-scroll .tl-card.tl-aside {
+    background: none;
+    border: 0;
+    border-radius: 0;
+    padding: 4px 0 4px 0;
+}
+#iap-pepperball-scroll .tl-card.tl-aside .tl-copy {
+    font-family: var(--sans);
+    font-size: 17px;
+    font-style: italic;
+    line-height: 1.45;
+    color: var(--aside);
+}
+#iap-pepperball-scroll .tl-row { transition: opacity .18s linear; }
+@media (max-width: 540px) {
+    #iap-pepperball-scroll { padding: 24px 14px 30px 14px; }
+    #iap-pepperball-scroll .tl-rail { width: 46px; }
+    #iap-pepperball-scroll .tl-cards { padding-left: 30px; }
+    #iap-pepperball-scroll .tl-year { right: 10px; font-size: 10px; }
+    #iap-pepperball-scroll .tl-card { padding: 13px 14px 14px; margin-bottom: 44px; }
+    #iap-pepperball-scroll .tl-copy { font-size: 14px; }
+    #iap-pepperball-scroll .tl-card.tl-aside .tl-copy { font-size: 15.5px; }
+}
+@media (prefers-reduced-motion: reduce) {
+    #iap-pepperball-scroll .tl-row { transition: none; }
+}
+</style>
+
+<div class="tl">
+    <div class="tl-rail">
+        <div class="tl-line"></div>
+    </div>
+    <svg class="tl-links" aria-hidden="true"></svg>
+    <div class="tl-cards"></div>
+</div>
+
+<script>
+(function () {
+    var root = document.getElementById("iap-pepperball-scroll");
+    if (!root || root.dataset.ready) return;
+    root.dataset.ready = "1";
+
+    var MONTHS = ["Jan.", "Feb.", "March", "April", "May", "June", "July", "Aug.", "Sept.", "Oct.", "Nov.", "Dec."];
+
+    function parseCSV(text) {
+        var rows = [], row = [], field = "", quoted = false, i = 0;
+        text = text.replace(/^\uFEFF/, "");
+        while (i < text.length) {
+            var c = text[i];
+            if (quoted) {
+                if (c === '"') {
+                    if (text[i + 1] === '"') { field += '"'; i += 2; continue; }
+                    quoted = false; i++; continue;
+                }
+                field += c; i++; continue;
+            }
+            if (c === '"') { quoted = true; i++; continue; }
+            if (c === ",") { row.push(field); field = ""; i++; continue; }
+            if (c === "\r") { i++; continue; }
+            if (c === "\n") { row.push(field); rows.push(row); row = []; field = ""; i++; continue; }
+            field += c; i++;
+        }
+        if (field.length || row.length) { row.push(field); rows.push(row); }
+        if (!rows.length) return [];
+        var head = rows.shift().map(function (h) { return h.trim(); });
+        return rows.filter(function (r) {
+            return r.some(function (v) { return String(v).trim() !== ""; });
+        }).map(function (r) {
+            var o = {};
+            head.forEach(function (h, n) { o[h] = (r[n] == null ? "" : String(r[n]).trim()); });
+            return o;
+        });
+    }
+
+    function parseDate(s) {
+        var m = /^(\d{1,2})\/(\d{1,2})\/(\d{2,4})$/.exec(String(s).trim());
+        if (!m) return null;
+        var y = +m[3];
+        if (y < 100) y += 2000;
+        return new Date(y, +m[1] - 1, +m[2]);
+    }
+
+    function fmtDate(d) {
+        return MONTHS[d.getMonth()] + " " + d.getDate() + ", " + d.getFullYear();
+    }
+
+    var rail = root.querySelector(".tl-rail");
+    var line = root.querySelector(".tl-line");
+    var svg = root.querySelector(".tl-links");
+    var cardsEl = root.querySelector(".tl-cards");
+    var tl = root.querySelector(".tl");
+    var entries = [];
+
+    fetch(root.dataset.csv).then(function (r) {
+        if (!r.ok) throw new Error(r.status);
+        return r.text();
+    }).then(function (text) {
+        var rows = parseCSV(text);
+        rows.forEach(function (r) {
+            var copy = r["card"] || r["card "] || "";
+            if (!copy) return;
+            var free = String(r["remove line"] || "").trim() !== "";
+            entries.push({ date: parseDate(r.date), copy: copy, free: free });
+        });
+        build();
+        layout();
+        window.addEventListener("resize", layout);
+        if (window.ResizeObserver) new ResizeObserver(layout).observe(cardsEl);
+        if (document.fonts && document.fonts.ready) document.fonts.ready.then(layout);
+        window.addEventListener("load", layout);
+        setTimeout(layout, 400);
+        setTimeout(layout, 1200);
+        bindFade();
+    }).catch(function () {});
+
+    function build() {
+        entries.forEach(function (e) {
+            var card = document.createElement("div");
+            card.className = "tl-card tl-row" + (e.free ? " tl-aside" : "");
+            if (!e.free && e.date) {
+                var k = document.createElement("span");
+                k.className = "tl-kicker";
+                k.textContent = fmtDate(e.date);
+                card.appendChild(k);
+            }
+            var p = document.createElement("p");
+            p.className = "tl-copy";
+            p.textContent = e.copy;
+            card.appendChild(p);
+            cardsEl.appendChild(card);
+            e.card = card;
+        });
+    }
+
+    function layout() {
+        if (!entries.length) return;
+        var dated = entries.filter(function (e) { return e.date && !e.free; });
+        if (dated.length < 2) return;
+
+        rail.querySelectorAll(".tl-dot, .tl-year, .tl-tick").forEach(function (n) { n.remove(); });
+        while (svg.firstChild) svg.removeChild(svg.firstChild);
+
+        var tlBox = tl.getBoundingClientRect();
+        var railW = rail.getBoundingClientRect().width;
+        var height = cardsEl.getBoundingClientRect().height;
+
+        function centerOf(e) {
+            var b = e.card.getBoundingClientRect();
+            return b.top - tlBox.top + b.height / 2;
+        }
+
+        var firstY = centerOf(dated[0]);
+        var lastY = centerOf(dated[dated.length - 1]);
+        var t0 = dated[0].date.getTime();
+        var t1 = dated[dated.length - 1].date.getTime();
+
+        function yFor(d) {
+            if (t1 === t0) return firstY;
+            return firstY + (d.getTime() - t0) / (t1 - t0) * (lastY - firstY);
+        }
+
+        line.style.top = (firstY - 14) + "px";
+        line.style.height = (lastY - firstY + 28) + "px";
+
+        var y0 = new Date(t0).getFullYear();
+        var y1 = new Date(t1).getFullYear();
+        var years = [{ label: y0, y: firstY }];
+        for (var y = y0 + 1; y <= y1; y++) {
+            years.push({ label: y, y: yFor(new Date(y, 0, 1)) });
+        }
+        years.forEach(function (yr) {
+            var tick = document.createElement("div");
+            tick.className = "tl-tick";
+            tick.style.top = yr.y + "px";
+            rail.appendChild(tick);
+            var lab = document.createElement("div");
+            lab.className = "tl-year";
+            lab.style.top = yr.y + "px";
+            lab.textContent = yr.label;
+            rail.appendChild(lab);
+        });
+
+        svg.setAttribute("width", tlBox.width);
+        svg.setAttribute("height", height);
+        svg.setAttribute("viewBox", "0 0 " + tlBox.width + " " + height);
+
+        dated.forEach(function (e) {
+            var my = yFor(e.date);
+            var dot = document.createElement("div");
+            dot.className = "tl-dot tl-row";
+            dot.style.top = my + "px";
+            rail.appendChild(dot);
+            e.dot = dot;
+
+            var cy = centerOf(e);
+            var gutter = parseFloat(getComputedStyle(cardsEl).paddingLeft) || 34;
+            var x0 = railW + 1;
+            var x1 = railW + gutter - 2;
+            var link = document.createElementNS("http://www.w3.org/2000/svg", "path");
+            var mid = (x0 + x1) / 2;
+            link.setAttribute("d", "M" + x0 + "," + my + " C" + mid + "," + my + " " + mid + "," + cy + " " + x1 + "," + cy);
+            link.setAttribute("fill", "none");
+            link.setAttribute("stroke", "currentColor");
+            link.setAttribute("stroke-width", "1.3");
+            link.setAttribute("class", "tl-row");
+            svg.appendChild(link);
+            e.link = link;
+        });
+
+        svg.style.color = getComputedStyle(root).getPropertyValue("--accent").trim();
+        fade();
+    }
+
+    function fade() {
+        var vh = window.innerHeight || document.documentElement.clientHeight;
+        entries.forEach(function (e) {
+            var b = e.card.getBoundingClientRect();
+            var cy = b.top + b.height / 2;
+            var d = Math.abs(cy - vh / 2) / (vh / 2);
+            var o = 1 - Math.max(0, d - 0.3) / 0.62;
+            o = Math.max(0.12, Math.min(1, o));
+            e.card.style.opacity = o.toFixed(3);
+            if (e.dot) e.dot.style.opacity = o.toFixed(3);
+            if (e.link) e.link.setAttribute("opacity", o.toFixed(3));
+        });
+    }
+
+    function bindFade() {
+        var queued = false;
+        function onScroll() {
+            if (!window.requestAnimationFrame) { fade(); return; }
+            if (queued) return;
+            queued = true;
+            window.requestAnimationFrame(function () { queued = false; fade(); });
+        }
+        window.addEventListener("scroll", onScroll, { passive: true });
+        window.addEventListener("resize", onScroll);
+        fade();
+    }
+})();
+</script>
+</div>
