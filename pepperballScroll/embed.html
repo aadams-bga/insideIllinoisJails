@@ -5,7 +5,7 @@
     --ground: var(--navy);
     --rule: rgba(255, 255, 255, 0.22);
     --year: rgba(255, 255, 255, 0.5);
-    --accent: #C86B77;
+    --accent: #FFFFFF;
     --card-bg: rgba(255, 255, 255, 0.055);
     --card-border: rgba(255, 255, 255, 0.14);
     --card-text: rgba(255, 255, 255, 0.9);
@@ -24,7 +24,7 @@
     --ground: transparent;
     --rule: #DCD4CE;
     --year: #6E656A;
-    --accent: #8A2C38;
+    --accent: #1F161A;
     --card-bg: #FFFFFF;
     --card-border: #DCD4CE;
     --card-text: #1F161A;
@@ -97,16 +97,6 @@
     margin-bottom: 58px;
 }
 #iap-pepperball-scroll .tl-card:last-child { margin-bottom: 0; }
-#iap-pepperball-scroll .tl-kicker {
-    display: block;
-    font-family: var(--sans-sm);
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 0.07em;
-    text-transform: uppercase;
-    color: var(--accent);
-    margin-bottom: 7px;
-}
 #iap-pepperball-scroll .tl-copy {
     font-size: 15px;
     line-height: 1.55;
@@ -122,6 +112,7 @@
 #iap-pepperball-scroll .tl-card.tl-aside .tl-copy {
     font-family: var(--sans);
     font-size: 17px;
+    font-weight: 700;
     font-style: italic;
     line-height: 1.45;
     color: var(--aside);
@@ -154,8 +145,6 @@
     var root = document.getElementById("iap-pepperball-scroll");
     if (!root || root.dataset.ready) return;
     root.dataset.ready = "1";
-
-    var MONTHS = ["Jan.", "Feb.", "March", "April", "May", "June", "July", "Aug.", "Sept.", "Oct.", "Nov.", "Dec."];
 
     function parseCSV(text) {
         var rows = [], row = [], field = "", quoted = false, i = 0;
@@ -195,10 +184,6 @@
         return new Date(y, +m[1] - 1, +m[2]);
     }
 
-    function fmtDate(d) {
-        return MONTHS[d.getMonth()] + " " + d.getDate() + ", " + d.getFullYear();
-    }
-
     var rail = root.querySelector(".tl-rail");
     var line = root.querySelector(".tl-line");
     var svg = root.querySelector(".tl-links");
@@ -232,12 +217,6 @@
         entries.forEach(function (e) {
             var card = document.createElement("div");
             card.className = "tl-card tl-row" + (e.free ? " tl-aside" : "");
-            if (!e.free && e.date) {
-                var k = document.createElement("span");
-                k.className = "tl-kicker";
-                k.textContent = fmtDate(e.date);
-                card.appendChild(k);
-            }
             var p = document.createElement("p");
             p.className = "tl-copy";
             p.textContent = e.copy;
