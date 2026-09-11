@@ -105,13 +105,10 @@
         color: #1F161A;
         z-index: 100;
         line-height: 1.45;
-        max-width: 230px;
+        max-width: 260px;
+        font-weight: 400;
     }
-    #chart-tooltip .tooltip-header {
-        font-weight: 700;
-        margin-bottom: 3px;
-    }
-    #chart-tooltip .tooltip-body { color: #574F54; }
+    #chart-tooltip .tt-name { font-weight: 700; }
     .graph-footer {
         margin-top: 22px;
         padding-top: 12px;
@@ -145,7 +142,7 @@
 <div id="chart-container-wrapper">
 
     <h1>More than a dozen people were moved across county or state lines before they died</h1>
-    <p class="subtitle">At least 18 people were moved across county lines before they died in jail custody between 2019 and 2025. A disproportionate number of these people, twelve of them, were not counted in state oversight data after they died.</p>
+    <p class="subtitle">At least 18 people were moved across county lines before they died in jail custody between 2019 and 2025. A disproportionate number of these people, two-thirds of them, were not counted in state oversight data after they died.</p>
 
 
     <div id="chart-wrapper" style="position: relative;">
@@ -400,12 +397,7 @@
                     flowG.classed("dim", true);
                     flowG.selectAll("g").classed("is-active", false);
                     g.classed("is-active", true);
-                    const people = f.people === 1 ? "1 person" : f.people + " people";
-                    let html = '<div class="tooltip-header">' + placeName(f.from) + " &rarr; " + placeName(f.to) + "</div>";
-                    html += '<div class="tooltip-body">' + people + " moved before dying in custody";
-                    if (f.uncounted > 0) html += "<br>" + f.uncounted + " not counted in state data";
-                    if (f.counted > 0) html += "<br>" + f.counted + " counted in state data";
-                    html += "</div>";
+                    const html = '<span class="tt-name">' + placeName(f.from) + '</span> to <span class="tt-name">' + placeName(f.to) + "</span>";
                     tooltip.style("display", "block").html(html);
 
                     const node = tooltip.node();
