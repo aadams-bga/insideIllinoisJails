@@ -12,7 +12,7 @@ html, body { margin: 0; padding: 0; background-color: transparent; }
 </style>
 </head>
 <body>
-<div id="iap-custody-dots" data-csv="inCustodyDeaths.csv" data-photo-base="">
+<div id="iap-custody-dots" data-csv="inCustodyDeaths.csv" data-photo-base="photos">
 <style>
 #iap-custody-dots {
     --ground: #FFFFFF;
@@ -183,6 +183,37 @@ html, body { margin: 0; padding: 0; background-color: transparent; }
     border-top: 1px solid var(--ink-muted);
 }
 #iap-custody-dots .dot-pop-blurb[hidden] { display: none; }
+#iap-custody-dots .dot-pop-supp {
+    font-family: var(--sans-sm);
+    font-style: italic;
+    font-size: var(--t-small);
+    line-height: 1.45;
+    color: var(--ink-muted);
+    margin: .45rem 0 0;
+}
+#iap-custody-dots .dot-pop-supp[hidden] { display: none; }
+#iap-custody-dots .dot-pop-credit {
+    font-family: var(--sans-sm);
+    font-size: var(--t-micro);
+    color: var(--ink-muted);
+    margin: -.25rem 0 .5rem;
+}
+#iap-custody-dots .dot-pop-credit[hidden] { display: none; }
+#iap-custody-dots .faces-c {
+    display: block;
+    font-family: var(--sans-sm);
+    font-size: var(--t-micro);
+    color: var(--ink-muted);
+    margin-top: .15rem;
+}
+#iap-custody-dots .suppression-note {
+    font-family: var(--sans-sm);
+    font-size: var(--t-small);
+    color: var(--ink-muted);
+    text-align: center;
+    margin: 1.25rem 0 0;
+}
+#iap-custody-dots .suppression-note[hidden] { display: none; }
 #iap-custody-dots .dot-pop-photo {
     display: block;
     width: 3.5rem;
@@ -288,11 +319,15 @@ html, body { margin: 0; padding: 0; background-color: transparent; }
         <span class="dot-pop-arrow" aria-hidden="true"></span>
         <button type="button" class="dot-pop-close" aria-label="Close">&times;</button>
         <img class="dot-pop-photo" alt="" hidden>
+        <p class="dot-pop-credit" hidden></p>
         <p class="dot-pop-hed"></p>
         <p class="dot-pop-meta"></p>
+        <p class="dot-pop-supp" hidden></p>
         <p class="dot-pop-blurb" hidden></p>
     </div>
 </div>
+
+<p class="suppression-note" hidden></p>
 
 <div class="faces-block" hidden>
     <p class="faces-lede"></p>
@@ -308,6 +343,9 @@ html, body { margin: 0; padding: 0; background-color: transparent; }
     var root = document.getElementById("iap-custody-dots");
     if (!root || root.dataset.ready) return;
     root.dataset.ready = "1";
+
+    var SUPPRESSED_ONE = "Illinois Answers withheld this name at the request of this person's family.";
+    var SUPPRESSED_ALL = "Illinois Answers withheld the names of some of the deceased at the request of their families.";
 
     var STATUS_LABEL = {
         counted: "Counted in the state's official total",
@@ -365,7 +403,7 @@ html, body { margin: 0; padding: 0; background-color: transparent; }
 
     function describe(d) {
         return [
-            d.name || null,
+            d.name || (d.suppressed ? "Name withheld" : null),
             d.age ? String(d.age) : null,
             d.county ? d.county + " County jail" : null,
             d.year || "year unrecorded",
@@ -385,9 +423,11 @@ html, body { margin: 0; padding: 0; background-color: transparent; }
                 name: r.name || "",
                 year: r.year ? Number(r.year) : null,
                 age: r.age || "",
-                county: r.county || "",
+                county: r.jail || r.county || "",
                 story: r.blurb || "",
                 photo: photoSrc(r.photo),
+                credit: r.photoCredit || "",
+                suppressed: String(r.idSuppressed || "").trim() !== "",
                 status: statusOf(r.counted)
             };
         });
@@ -412,6 +452,10 @@ html, body { margin: 0; padding: 0; background-color: transparent; }
         var uncounted = dots.filter(function (d) { return d.status === "uncounted"; }).length;
         var unknown = dots.filter(function (d) { return d.status === "unknown"; }).length;
         var withStory = dots.filter(function (d) { return d.story || d.photo; }).length;
+        var suppressed = dots.filter(function (d) { return d.suppressed; }).length;
+
+        var note = root.querySelector(".suppression-note");
+        if (suppressed > 0) { note.textContent = SUPPRESSED_ALL; note.hidden = false; }
 
         var key = root.querySelector(".ds-key");
         var keyHtml = "";
@@ -443,6 +487,8 @@ html, body { margin: 0; padding: 0; background-color: transparent; }
             if (d.name) b.dataset.name = d.name;
             if (d.age) b.dataset.age = d.age;
             if (d.photo) b.dataset.photo = d.photo;
+            if (d.credit) b.dataset.credit = d.credit;
+            if (d.suppressed) b.dataset.suppressed = "1";
             if (d.story) b.dataset.story = d.story;
             if (d.startsYear) b.dataset.startsYear = d.startsYear;
             var sr = document.createElement("span");
@@ -491,6 +537,12 @@ html, body { margin: 0; padding: 0; background-color: transparent; }
                 li.appendChild(img);
                 li.appendChild(n);
                 li.appendChild(m);
+                if (d.credit) {
+                    var cr = document.createElement("span");
+                    cr.className = "faces-c";
+                    cr.textContent = d.credit;
+                    li.appendChild(cr);
+                }
                 ul.appendChild(li);
             });
         }
@@ -505,6 +557,8 @@ html, body { margin: 0; padding: 0; background-color: transparent; }
         var hed = pop.querySelector(".dot-pop-hed");
         var meta = pop.querySelector(".dot-pop-meta");
         var blurb = pop.querySelector(".dot-pop-blurb");
+        var supp = pop.querySelector(".dot-pop-supp");
+        var credit = pop.querySelector(".dot-pop-credit");
         var closeBtn = pop.querySelector(".dot-pop-close");
 
         var marks = [].slice.call(wrap.querySelectorAll(".ylabel")).map(function (el) {
@@ -546,6 +600,9 @@ html, body { margin: 0; padding: 0; background-color: transparent; }
             else { photo.hidden = true; photo.removeAttribute("src"); }
             photo.onerror = function () { photo.hidden = true; };
 
+            credit.hidden = !(d.photo && d.credit);
+            credit.textContent = d.credit || "";
+
             hed.textContent = d.name || (d.county ? d.county + " County" : d.statusLabel);
             var bits = [];
             if (d.age) bits.push(d.age);
@@ -553,6 +610,9 @@ html, body { margin: 0; padding: 0; background-color: transparent; }
             bits.push(d.year || "Year unrecorded");
             if (hed.textContent !== d.statusLabel && d.status !== "unknown") bits.push(d.statusLabel);
             meta.textContent = bits.join(" \u00b7 ");
+
+            supp.hidden = !d.suppressed;
+            supp.textContent = d.suppressed ? SUPPRESSED_ONE : "";
 
             blurb.hidden = !d.story;
             blurb.textContent = d.story || "";
