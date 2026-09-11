@@ -47,5 +47,5 @@
 <iframe id="pepperballMap"       src="https://aadams-bga.github.io/insideIllinoisJails/pepperballMap/"       height="800" loading="lazy" scrolling="no" frameborder="0" style="display:block;width:100%;border:0;overflow:hidden"></iframe>
 <iframe id="inspectionMap"       src="https://aadams-bga.github.io/insideIllinoisJails/inspectionMap/"       height="794" loading="lazy" scrolling="no" frameborder="0" style="display:block;width:100%;border:0;overflow:hidden"></iframe>
 <iframe id="inCustodyDeaths"     src="https://aadams-bga.github.io/insideIllinoisJails/inCustodyDeaths/"     height="809" loading="lazy" scrolling="no" frameborder="0" style="display:block;width:100%;border:0;overflow:hidden"></iframe>
-<iframe id="countyLineTransfer"  src="https://aadams-bga.github.io/insideIllinoisJails/countyLineTransfer/"  height="938" loading="lazy" scrolling="no" frameborder="0" style="display:block;width:100%;border:0;overflow:hidden"></iframe>
+<iframe id="countyLineTransfer"  src="https://aadams-bga.github.io/insideIllinoisJails/countyLineTransfer/"  height="914" loading="lazy" scrolling="no" frameborder="0" style="display:block;width:100%;border:0;overflow:hidden"></iframe>
 ```
