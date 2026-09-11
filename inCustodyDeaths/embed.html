@@ -31,12 +31,14 @@
     line-height: 1.25;
     letter-spacing: -0.01em;
     color: var(--ink);
+    text-align: center;
     margin: 0 0 8px 0;
 }
 #iap-custody-dots p.dek {
     font-size: 14px;
     line-height: 1.45;
     color: var(--ink-muted);
+    text-align: center;
     margin: 0 0 18px 0;
 }
 #iap-custody-dots .ds-key {
@@ -129,7 +131,7 @@
     width: min(17.5rem, 100%);
     background: var(--parchment);
     border: var(--rule);
-    border-radius: 14px;
+    border-radius: 5px;
     padding: .85rem .9rem .9rem;
     text-align: left;
 }
@@ -186,10 +188,11 @@
 #iap-custody-dots .dot-pop-credit[hidden] { display: none; }
 #iap-custody-dots .suppression-note {
     font-family: var(--sans-sm);
-    font-size: var(--t-small);
-    color: var(--ink-muted);
+    font-size: var(--t-micro);
+    color: #6E656A;
     text-align: center;
-    margin: 1.25rem 0 0;
+    line-height: 1.45;
+    margin: 1.35rem 0 0;
 }
 #iap-custody-dots .suppression-note[hidden] { display: none; }
 #iap-custody-dots .dot-pop-photo {
@@ -197,7 +200,7 @@
     width: 8rem;
     aspect-ratio: 4 / 5;
     object-fit: cover;
-    border-radius: 8px;
+    border-radius: 3px;
     margin: 0 0 .5rem;
     background: rgba(31, 22, 26, .07);
 }
@@ -513,7 +516,7 @@
             pop.style.left = left + "px";
             pop.style.top = (above ? cy - ph - 10 : cy + db.height + 10) + "px";
 
-            arrow.style.left = Math.max(18, Math.min(cx - left - 5, pw - 27)) + "px";
+            arrow.style.left = Math.max(10, Math.min(cx - left - 5, pw - 20)) + "px";
             arrow.style.top = above ? (ph - 5) + "px" : "-5px";
             arrow.style.transform = above ? "rotate(225deg)" : "rotate(45deg)";
         }
