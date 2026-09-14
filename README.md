@@ -14,6 +14,9 @@
 - [pepperballScroll](https://aadams-bga.github.io/insideIllinoisJails/pepperballScroll/)
 - [pepperballPolicy](https://aadams-bga.github.io/insideIllinoisJails/pepperballPolicy/)
 
+**Use this as the embed code**
+Change id and the slug portion of the src url 
+
 ```html
 <iframe
   id="incidentsMain"
@@ -24,7 +27,11 @@
   frameborder="0"
   style="display:block;width:100%;border:0;overflow:hidden"
 ></iframe>
+```
 
+**Put this somewhere on the page**
+
+```html
 <script>
 (function () {
   function ask() {
@@ -45,6 +52,8 @@
 })();
 </script>
 ```
+
+**All iframes for reference**
 
 ```html
 <iframe id="incidentsMain"       src="https://aadams-bga.github.io/insideIllinoisJails/incidentsMain/"       height="660" loading="lazy" scrolling="no" frameborder="0" style="display:block;width:100%;border:0;overflow:hidden"></iframe>
