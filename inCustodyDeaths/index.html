@@ -382,6 +382,17 @@ html, body { margin: 0; padding: 0; background-color: transparent; }
     var AP_MONTHS = ["Jan.", "Feb.", "March", "April", "May", "June",
                      "July", "Aug.", "Sept.", "Oct.", "Nov.", "Dec."];
 
+    function parseDeathDate(v) {
+        var m = /^(\d{1,2})\/(\d{1,2})\/(\d{2,4})$/.exec(String(v || "").trim());
+        if (!m) return null;
+        var mo = +m[1] - 1;
+        var day = +m[2];
+        var yr = +m[3];
+        if (mo < 0 || mo > 11 || !day) return null;
+        if (yr < 100) yr += 2000;
+        return new Date(yr, mo, day).getTime();
+    }
+
     function fmtDeathDate(v) {
         var m = /^(\d{1,2})\/(\d{1,2})\/(\d{2,4})$/.exec(String(v || "").trim());
         if (!m) return "";
@@ -426,6 +437,7 @@ html, body { margin: 0; padding: 0; background-color: transparent; }
                 photo: photoSrc(r.photo),
                 credit: r.photoCredit || "",
                 death: fmtDeathDate(r.death_date),
+                ts: parseDeathDate(r.death_date),
                 suppressed: String(r.idSuppressed || "").trim() !== "",
                 status: statusOf(r.counted)
             };
@@ -437,6 +449,9 @@ html, body { margin: 0; padding: 0; background-color: transparent; }
 
     function render(dots) {
         dots.sort(function (a, b) {
+            var at = a.ts == null ? Infinity : a.ts;
+            var bt = b.ts == null ? Infinity : b.ts;
+            if (at !== bt) return at - bt;
             var ay = a.year == null ? Infinity : a.year;
             var by = b.year == null ? Infinity : b.year;
             return (ay - by) || (a.i - b.i);

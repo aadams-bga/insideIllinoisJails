@@ -1,0 +1,140 @@
+#iap-pepperball-scroll {
+    --navy: #14243F;
+    --ground: var(--navy);
+    --rule: rgba(255, 255, 255, 0.22);
+    --year: rgba(255, 255, 255, 0.5);
+    --accent: #FFFFFF;
+    --card-bg: rgba(255, 255, 255, 0.055);
+    --card-border: rgba(255, 255, 255, 0.14);
+    --card-text: rgba(255, 255, 255, 0.9);
+    --kicker: rgba(255, 255, 255, 0.62);
+    --aside: rgba(255, 255, 255, 0.62);
+    --sans: "halyard-display", "Halyard Display", "Inter", ui-sans-serif, "Helvetica Neue", Arial, sans-serif;
+    --sans-sm: "halyard-text", "Halyard Text", "Inter", ui-sans-serif, "Helvetica Neue", Arial, sans-serif;
+    background: var(--ground);
+    color: var(--card-text);
+    font-family: var(--sans-sm);
+    -webkit-font-smoothing: antialiased;
+    padding: 34px 20px 40px 20px;
+    box-sizing: border-box;
+}
+#iap-pepperball-scroll.light {
+    --ground: transparent;
+    --rule: #DCD4CE;
+    --year: #6E656A;
+    --accent: #1F161A;
+    --card-bg: #FFFFFF;
+    --card-border: #DCD4CE;
+    --card-text: #1F161A;
+    --kicker: #574F54;
+    --aside: #574F54;
+}
+#iap-pepperball-scroll *, #iap-pepperball-scroll *::before, #iap-pepperball-scroll *::after { box-sizing: border-box; }
+#iap-pepperball-scroll .tl {
+    position: relative;
+    display: flex;
+    max-width: 720px;
+    margin: 0 auto;
+}
+#iap-pepperball-scroll .tl-rail {
+    position: relative;
+    flex: 0 0 auto;
+    width: 66px;
+}
+#iap-pepperball-scroll .tl-line {
+    position: absolute;
+    right: 0;
+    width: 2px;
+    background: var(--rule);
+}
+#iap-pepperball-scroll .tl-year {
+    position: absolute;
+    right: 12px;
+    transform: translateY(-50%);
+    font-family: var(--sans-sm);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    color: var(--year);
+    white-space: nowrap;
+}
+#iap-pepperball-scroll .tl-tick {
+    position: absolute;
+    right: 0;
+    width: 8px;
+    height: 1px;
+    background: var(--rule);
+}
+#iap-pepperball-scroll .tl-dot {
+    position: absolute;
+    right: -4px;
+    width: 10px;
+    height: 10px;
+    margin-top: -5px;
+    border-radius: 50%;
+    background: var(--accent);
+}
+#iap-pepperball-scroll .tl-links {
+    position: absolute;
+    left: 0;
+    top: 0;
+    pointer-events: none;
+    overflow: visible;
+}
+#iap-pepperball-scroll .tl-cards {
+    flex: 1 1 auto;
+    min-width: 0;
+    padding-left: 58px;
+}
+#iap-pepperball-scroll .tl-links path {
+    stroke-opacity: 0.62;
+    stroke-linejoin: miter;
+    stroke-linecap: butt;
+}
+#iap-pepperball-scroll .tl-card {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    padding: 15px 17px 16px;
+    margin-bottom: 58px;
+}
+#iap-pepperball-scroll .tl-card:last-child { margin-bottom: 0; }
+#iap-pepperball-scroll .tl-copy {
+    font-size: 15px;
+    line-height: 1.55;
+    margin: 0;
+    color: var(--card-text);
+}
+#iap-pepperball-scroll .tl-card.tl-aside {
+    background: none;
+    border: 0;
+    padding: 4px 0 4px 0;
+}
+#iap-pepperball-scroll .tl-card.tl-aside .tl-copy {
+    font-family: var(--sans);
+    font-size: 17px;
+    font-weight: 700;
+    font-style: italic;
+    line-height: 1.45;
+    color: var(--aside);
+}
+#iap-pepperball-scroll .tl-row { transition: opacity .18s linear; }
+#iap-pepperball-scroll .tl-status {
+    font-family: var(--sans-sm);
+    font-size: 13px;
+    line-height: 1.5;
+    color: var(--aside);
+    padding: 14px 0 14px 66px;
+    margin: 0;
+}
+@media (max-width: 540px) {
+    #iap-pepperball-scroll { padding: 24px 14px 30px 14px; }
+    #iap-pepperball-scroll .tl-rail { width: 46px; }
+    #iap-pepperball-scroll .tl-cards { padding-left: 30px; }
+    #iap-pepperball-scroll .tl-year { right: 10px; font-size: 10px; }
+    #iap-pepperball-scroll .tl-card { padding: 13px 14px 14px; margin-bottom: 44px; }
+    #iap-pepperball-scroll .tl-copy { font-size: 14px; }
+    #iap-pepperball-scroll .tl-card.tl-aside .tl-copy { font-size: 15.5px; }
+}
+@media (prefers-reduced-motion: reduce) {
+    #iap-pepperball-scroll .tl-row { transition: none; }
+}
