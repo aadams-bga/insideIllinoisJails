@@ -46,7 +46,8 @@
     align-items: center;
     gap: 10px;
     flex-wrap: wrap;
-    margin: 0 0 1.1rem;
+    max-width: 24.875rem;
+    margin: 0 auto 1.1rem;
 }
 #iap-custody-dots .dot-search input {
     flex: 1 1 220px;
@@ -596,9 +597,9 @@
             hed.textContent = d.name || "";
             pop.classList.toggle("no-hed", !d.name);
             var bits = [];
-            if (d.age) bits.push("Age " + d.age);
+            if (d.age) bits.push("Age: " + d.age);
             if (d.death) bits.push("Date of death: " + d.death);
-            if (d.county) bits.push("County jail: " + d.county);
+            if (d.county) bits.push(d.county + " County jail");
             if (d.status !== "unknown" && d.statusLabel) bits.push(d.statusLabel);
             meta.textContent = bits.join(" \u00b7 ");
 
