@@ -246,14 +246,14 @@
 
 <div id="chart-container-wrapper">
 
-    <h1>At least 20 county sheriffs own a pepperball launcher and 11 have used them on jail detainees</h1>
-    <p class="subtitle">Only 5 counties have a formal policy for using the weapon, with one more working on a policy.</p>
+    <h1>At least 20 county jails have a pepperball launcher and 11 have fired them</h1>
+    <p class="subtitle">The vast majority of Illinois county jails don&rsquo;t have or use pepperball launchers.</p>
 
     <div id="chart-legend">
-        <span class="legend-item"><span class="legend-swatch" style="background:#8A2C38"></span>Has a pepperball gun and a record of using it</span>
-        <span class="legend-item"><span class="legend-swatch" style="background:#53646D"></span>Has a pepperball gun but no record of use</span>
-        <span class="legend-item"><span class="legend-swatch" style="background:#8A827F"></span>Has a jail but no record of owning one</span>
-        <span class="legend-item"><span class="legend-swatch" style="background:#D8D2CC"></span>Has no jail</span>
+        <span class="legend-item"><span class="legend-swatch" style="background:#8A2C38"></span>Has a pepperball launcher and a record of using it</span>
+        <span class="legend-item"><span class="legend-swatch" style="background:#BE8A91"></span>Has a pepperball launcher but no record of use</span>
+        <span class="legend-item"><span class="legend-swatch" style="background:#D8D2CC"></span>Has no record of owning a pepperball launcher</span>
+        <span class="legend-item"><span class="legend-swatch" style="background:repeating-linear-gradient(45deg, #A79E99 0 1.4px, #EFEAE6 1.4px 5px)"></span>Has no jail</span>
     </div>
 
     <div id="chart-wrapper" style="position: relative;">
@@ -264,7 +264,7 @@
     </div>
 
     <footer class="graph-footer">
-        Map: Andrew Adams, Illinois Answers Project &middot; Source: Illinois Answers Project analysis of state data &middot; <a href="https://cdn.jsdelivr.net/gh/aadams-bga/insideIllinoisJails@main/pepperballMap/pepperballMap.csv" target="_blank" rel="noopener">Download the data</a>
+        Map: Andrew Adams, Illinois Answers Project &middot; Source: Illinois Answers Project analysis of county records &middot; <a href="https://cdn.jsdelivr.net/gh/aadams-bga/insideIllinoisJails@main/pepperballMap/pepperballMap.csv" target="_blank" rel="noopener">Download the data</a>
     </footer>
     <img src="https://raw.githubusercontent.com/aadams-bga/images/bffe8cc967881aeed4fbdee8328f4b2e056159b9/iaplogo.svg" class="iap-logo" alt="Illinois Answers Project logo">
 </div>
@@ -272,6 +272,7 @@
 <script>
 (function () {
     const MAROON = "#8A2C38";
+    const MAROON_LIGHT = "#BE8A91";
     const STEEL = "#53646D";
     const AMBER = "#C06621";
     const SAGE = "#353B32";
@@ -382,10 +383,10 @@
     }
 
     const CATEGORIES = [
-        { key: "Has a pepperball gun and has a record of using it", color: MAROON },
-        { key: "Has a pepperball gun but no record of use", color: STEEL },
-        { key: "Has a jail but no record of owning a pepperball gun", color: NEUTRAL },
-        { key: "Has no jail", color: FAINT }
+        { key: "Has a pepperball launcher and has a record of using it", color: MAROON },
+        { key: "Has a pepperball launcher but no record of use", color: MAROON_LIGHT },
+        { key: "Has no record of owning a pepperball launcher", color: FAINT },
+        { key: "Has no jail", color: "url(#no-jail-hatch)" }
     ];
 
     const colorFor = new Map(CATEGORIES.map(c => [c.key, c.color]));
@@ -423,6 +424,18 @@
             .rotate([89.5, 0])
             .fitSize([width, height], collection);
         const path = d3.geoPath(projection);
+
+        const pattern = svg.append("defs").append("pattern")
+            .attr("id", "no-jail-hatch")
+            .attr("width", 5)
+            .attr("height", 5)
+            .attr("patternUnits", "userSpaceOnUse")
+            .attr("patternTransform", "rotate(45)");
+        pattern.append("rect").attr("width", 5).attr("height", 5).attr("fill", "#EFEAE6");
+        pattern.append("line")
+            .attr("x1", 0).attr("y1", 0).attr("x2", 0).attr("y2", 5)
+            .attr("stroke", "#A79E99")
+            .attr("stroke-width", 1.4);
 
         const hover = svg.append("path").attr("class", "map-hover");
 

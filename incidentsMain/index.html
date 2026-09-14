@@ -502,16 +502,19 @@
                         .attr("cy", s => y(d[s.key]))
                         .style("display", s => d[s.key] === null ? "none" : null);
 
+                    const shown = tipSeries.filter(function (s) { return d[s.key] !== null; });
+                    if (!shown.length) {
+                        tooltip.style("display", "none");
+                        return;
+                    }
+
                     let html = '<div class="tooltip-header">' + fmtMonth(d.date) + "</div>";
                     html += '<div class="tooltip-sub">12-month rolling average</div>';
-                    tipSeries.forEach(function (s) {
-                        const v = d[s.key];
+                    shown.forEach(function (s) {
                         html += '<div class="tooltip-row">';
                         html += '<span class="tooltip-swatch" style="background:' + s.color + ";opacity:" + s.opacity + '"></span>';
                         html += '<span class="tooltip-name">' + esc(s.name) + "</span>";
-                        html += v === null
-                            ? '<span class="tooltip-value tooltip-missing">no data</span>'
-                            : '<span class="tooltip-value">' + Math.round(v).toLocaleString("en-US") + "</span>";
+                        html += '<span class="tooltip-value">' + Math.round(d[s.key]).toLocaleString("en-US") + "</span>";
                         html += "</div>";
                     });
                     tooltip.style("display", "block").html(html);
