@@ -27,11 +27,21 @@
 
 <script>
 (function () {
+  function ask() {
+    var frames = document.getElementsByTagName("iframe");
+    for (var i = 0; i < frames.length; i++) {
+      try { frames[i].contentWindow.postMessage({ type: "iap-graphic-request" }, "*"); } catch (e) {}
+    }
+  }
   window.addEventListener("message", function (e) {
     if (!e.data || e.data.type !== "iap-graphic-height") return;
     var frame = document.getElementById(e.data.id);
     if (frame) frame.style.height = e.data.height + "px";
   });
+  ask();
+  window.addEventListener("load", ask);
+  setTimeout(ask, 500);
+  setTimeout(ask, 2000);
 })();
 </script>
 ```

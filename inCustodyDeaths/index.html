@@ -670,9 +670,9 @@ html, body { margin: 0; padding: 0; background-color: transparent; }
 (function () {
     if (window.parent === window) return;
     var last = 0;
-    function send() {
+    function send(force) {
         var h = Math.ceil(document.documentElement.getBoundingClientRect().height);
-        if (!h || Math.abs(h - last) < 2) return;
+        if (!h || (!force && Math.abs(h - last) < 2)) return;
         last = h;
         window.parent.postMessage({ type: "iap-graphic-height", id: "inCustodyDeaths", height: h }, "*");
     }
@@ -681,6 +681,9 @@ html, body { margin: 0; padding: 0; background-color: transparent; }
     if (window.ResizeObserver) new ResizeObserver(send).observe(document.body);
     setTimeout(send, 300);
     setTimeout(send, 1200);
+    window.addEventListener("message", function (e) {
+        if (e.data && e.data.type === "iap-graphic-request") send(true);
+    });
 })();
 </script>
 </body>

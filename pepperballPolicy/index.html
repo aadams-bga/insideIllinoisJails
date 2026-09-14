@@ -331,14 +331,14 @@
     }
 
     var last = 0;
-    function sendHeight() {
+    function sendHeight(force) {
         if (window.parent === window) return;
         var h = Math.ceil(document.documentElement.getBoundingClientRect().height);
         if (!list.classList.contains("hidden")) {
             var b = list.getBoundingClientRect();
             h = Math.max(h, Math.ceil(b.bottom + window.scrollY + 16));
         }
-        if (!h || Math.abs(h - last) < 2) return;
+        if (!h || (!force && Math.abs(h - last) < 2)) return;
         last = h;
         window.parent.postMessage({ type: "iap-graphic-height", id: "pepperballPolicy", height: h }, "*");
     }
@@ -348,6 +348,9 @@
     if (window.ResizeObserver) new ResizeObserver(sendHeight).observe(document.body);
     setTimeout(sendHeight, 300);
     setTimeout(sendHeight, 1200);
+        window.addEventListener("message", function (e) {
+            if (e.data && e.data.type === "iap-graphic-request") sendHeight(true);
+        });
 })();
 </script>
 </body>
