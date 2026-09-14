@@ -73,6 +73,8 @@
     color: var(--ink-muted);
     white-space: nowrap;
 }
+#iap-custody-dots .dots.has-open .dot::after { opacity: 0.18; }
+#iap-custody-dots .dots.has-open .dot.is-open::after { opacity: 1; }
 #iap-custody-dots .dots .dot.filtered-out {
     pointer-events: none;
     cursor: default;
@@ -178,15 +180,6 @@
 }
 #iap-custody-dots .dot-pop[hidden] { display: none; }
 #iap-custody-dots .dot-pop[data-status="uncounted"] { border-color: var(--maroon); }
-#iap-custody-dots .dot-pop-arrow {
-    position: absolute;
-    width: 9px;
-    height: 9px;
-    background: var(--parchment);
-    border-left: 2px solid var(--ink);
-    border-top: 2px solid var(--ink);
-}
-#iap-custody-dots .dot-pop[data-status="uncounted"] .dot-pop-arrow { border-color: var(--maroon); }
 #iap-custody-dots .dot-pop-hed {
     font-family: var(--sans);
     font-weight: 600;
@@ -293,7 +286,6 @@
 <div class="dots-wrap">
     <div class="dots" role="group"></div>
     <div class="dot-pop" role="dialog" aria-modal="false" hidden>
-        <span class="dot-pop-arrow" aria-hidden="true"></span>
         <button type="button" class="dot-pop-close" aria-label="Close">&times;</button>
         <img class="dot-pop-photo" alt="" hidden>
         <p class="dot-pop-credit" hidden></p>
@@ -552,7 +544,6 @@
 
     function wire(wrap, grid) {
         var pop = wrap.querySelector(".dot-pop");
-        var arrow = pop.querySelector(".dot-pop-arrow");
         var photo = pop.querySelector(".dot-pop-photo");
         var hed = pop.querySelector(".dot-pop-hed");
         var meta = pop.querySelector(".dot-pop-meta");
@@ -587,6 +578,7 @@
             if (!open) return;
             open.classList.remove("is-open");
             open.setAttribute("aria-expanded", "false");
+            grid.classList.remove("has-open");
             open = null;
             pop.hidden = true;
         }
@@ -629,6 +621,7 @@
             pop.dataset.status = d.status;
             dot.classList.add("is-open");
             dot.setAttribute("aria-expanded", "true");
+            grid.classList.add("has-open");
             open = dot;
 
             var wb = wrap.getBoundingClientRect();
@@ -657,11 +650,6 @@
 
             pop.style.left = left + "px";
             pop.style.top = top + "px";
-
-            arrow.style.left = Math.max(10, Math.min(cx - left - 5, pw - 20)) + "px";
-            var pointsUp = top > cy;
-            arrow.style.top = pointsUp ? "-5px" : (ph - 5) + "px";
-            arrow.style.transform = pointsUp ? "rotate(45deg)" : "rotate(225deg)";
         }
 
         grid.addEventListener("click", function (e) {
