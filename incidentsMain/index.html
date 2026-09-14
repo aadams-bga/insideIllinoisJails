@@ -352,6 +352,7 @@
             data = rows.sort((a, b) => a.date - b.date);
             render();
             window.addEventListener("resize", render);
+            if (document.fonts && document.fonts.ready) document.fonts.ready.then(render);
         });
 
         function render() {
@@ -363,7 +364,7 @@
             const isMobile = width < 500;
             const height = isMobile ? 300 : 380;
             const margin = {
-                top: 26,
+                top: 40,
                 right: isMobile ? 12 : cfg.rightMargin,
                 bottom: 26,
                 left: isMobile ? 32 : 38
@@ -388,12 +389,6 @@
 
             const g = svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-            g.append("text")
-                .attr("class", "axis-title")
-                .attr("x", 0)
-                .attr("y", -11)
-                .text("Number of monthly incidents");
-
             const yTicks = y.ticks(4);
             g.selectAll(".grid-line")
                 .data(yTicks)
@@ -405,7 +400,7 @@
                 .attr("y1", d => y(d))
                 .attr("y2", d => y(d));
 
-            g.selectAll(".y-label")
+            const yLabels = g.selectAll(".y-label")
                 .data(yTicks)
                 .enter()
                 .append("text")
@@ -415,6 +410,19 @@
                 .attr("dy", "0.32em")
                 .attr("text-anchor", "end")
                 .text(d => d);
+
+            let titleX = -8;
+            yLabels.each(function () {
+                const b = this.getBBox();
+                if (b.x < titleX) titleX = b.x;
+            });
+
+            const axisTitle = g.append("text")
+                .attr("class", "axis-title")
+                .attr("x", titleX)
+                .attr("y", -25);
+            axisTitle.append("tspan").attr("x", titleX).text("Number of");
+            axisTitle.append("tspan").attr("x", titleX).attr("dy", 13).text("monthly incidents");
 
             const xAxisG = g.append("g").attr("transform", "translate(0," + innerHeight + ")");
             xAxisG.append("line").attr("class", "axis-line").attr("x1", 0).attr("x2", innerWidth);

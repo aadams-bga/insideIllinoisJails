@@ -107,6 +107,23 @@
         stroke-width: 1px;
     }
 
+    .marker-label {
+        font-family: "Halyard Text", "halyard-text", "Inter", Arial, sans-serif;
+        font-size: 11px;
+        font-weight: 600;
+        fill: #574F54;
+        paint-order: stroke;
+        stroke: #FFFFFF;
+        stroke-width: 3px;
+        stroke-linejoin: round;
+        pointer-events: none;
+    }
+    .axis-title {
+        font-size: 11px;
+        font-weight: 600;
+        fill: #6E656A;
+        font-family: "Halyard Text", "halyard-text", "Inter", Arial, sans-serif;
+    }
     .axis-label {
         font-size: 11px;
         fill: #6E656A;
@@ -345,6 +362,7 @@
             data = rows.sort((a, b) => a.date - b.date);
             render();
             window.addEventListener("resize", render);
+            if (document.fonts && document.fonts.ready) document.fonts.ready.then(render);
         });
 
         function render() {
@@ -356,7 +374,7 @@
             const isMobile = width < 500;
             const height = isMobile ? 300 : 380;
             const margin = {
-                top: 12,
+                top: 40,
                 right: isMobile ? 12 : cfg.rightMargin,
                 bottom: 26,
                 left: isMobile ? 32 : 38
@@ -392,7 +410,7 @@
                 .attr("y1", d => y(d))
                 .attr("y2", d => y(d));
 
-            g.selectAll(".y-label")
+            const yLabels = g.selectAll(".y-label")
                 .data(yTicks)
                 .enter()
                 .append("text")
@@ -402,6 +420,19 @@
                 .attr("dy", "0.32em")
                 .attr("text-anchor", "end")
                 .text(d => d);
+
+            let titleX = -8;
+            yLabels.each(function () {
+                const b = this.getBBox();
+                if (b.x < titleX) titleX = b.x;
+            });
+
+            const axisTitle = g.append("text")
+                .attr("class", "axis-title")
+                .attr("x", titleX)
+                .attr("y", -25);
+            axisTitle.append("tspan").attr("x", titleX).text("Number of");
+            axisTitle.append("tspan").attr("x", titleX).attr("dy", 13).text("monthly incidents");
 
             const xAxisG = g.append("g").attr("transform", "translate(0," + innerHeight + ")");
             xAxisG.append("line").attr("class", "axis-line").attr("x1", 0).attr("x2", innerWidth);
@@ -416,14 +447,23 @@
                 .text(d3.timeFormat("%Y"));
 
             (cfg.markers || []).forEach(function (m) {
-                const md = parseDate(m);
+                const md = parseDate(m.date || m);
                 if (!md) return;
+                const mx = x(md);
                 g.append("line")
                     .attr("class", "marker-rule")
-                    .attr("x1", x(md))
-                    .attr("x2", x(md))
+                    .attr("x1", mx)
+                    .attr("x2", mx)
                     .attr("y1", 0)
                     .attr("y2", innerHeight);
+                if (m.label && !isMobile) {
+                    g.append("text")
+                        .attr("class", "marker-label")
+                        .attr("x", mx - 7)
+                        .attr("y", 11)
+                        .attr("text-anchor", "end")
+                        .text(m.label);
+                }
             });
 
             const line = d3.line()
@@ -511,7 +551,7 @@
         dateField: "Month",
         yStep: 20,
         rightMargin: 118,
-        markers: ["7/1/2024"],
+        markers: [{ date: "7/1/2024", label: "Illinois Answers publishes investigation" }],
         series: [
             { key: "oc", field: "OCSpray", name: "OC spray", color: MAROON, width: 2, opacity: 1, label: ["OC spray"] },
             { key: "injury", field: "seriousInjury", name: "Serious injury", color: STEEL_1, width: 2, opacity: 1, label: ["Serious injury"] },
