@@ -55,6 +55,45 @@ html, body { margin: 0; padding: 0; background-color: transparent; }
     text-align: center;
     margin: 0 0 18px 0;
 }
+#iap-custody-dots .dot-search {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin: 0 0 1.1rem;
+}
+#iap-custody-dots .dot-search input {
+    flex: 1 1 220px;
+    min-width: 0;
+    padding: 9px 12px;
+    font-family: inherit;
+    font-size: 14px;
+    color: var(--ink);
+    background: #FFFFFF;
+    border: 1px solid #B9B0AB;
+    border-radius: 3px;
+    -webkit-appearance: none;
+    appearance: none;
+}
+#iap-custody-dots .dot-search input:focus {
+    outline: none;
+    border-color: var(--steel);
+    box-shadow: 0 0 0 2px rgba(111, 133, 144, 0.25);
+}
+#iap-custody-dots .dot-search-count {
+    font-family: var(--sans-sm);
+    font-size: var(--t-small);
+    color: var(--ink-muted);
+    white-space: nowrap;
+}
+#iap-custody-dots .dots .dot.filtered-out {
+    pointer-events: none;
+    cursor: default;
+}
+#iap-custody-dots .dots .dot.filtered-out::after {
+    opacity: 0.16;
+}
+#iap-custody-dots .dots .dot.filtered-out::before { display: none; }
 #iap-custody-dots .ds-key {
     display: flex;
     flex-wrap: wrap;
@@ -168,6 +207,8 @@ html, body { margin: 0; padding: 0; background-color: transparent; }
     margin: 0 .4rem .3rem 0;
     padding-right: .9rem;
 }
+#iap-custody-dots .dot-pop-hed[hidden] { display: none; }
+#iap-custody-dots .dot-pop.no-hed .dot-pop-meta { padding-right: 1rem; }
 #iap-custody-dots .dot-pop-meta {
     font-family: var(--sans-sm);
     font-weight: 500;
@@ -252,7 +293,12 @@ html, body { margin: 0; padding: 0; background-color: transparent; }
 </style>
 
 <h1>More than one in four people who died in Illinois county jails between 2019 and 2025 were not counted in state data</h1>
-<p class="dek">Click a dot to learn more about individuals who died in jail custody.</p>
+<p class="dek">Click a dot to learn more about individuals who died in jail custody or search for a particular name or county.</p>
+
+<div class="dot-search">
+    <input type="search" id="dot-search-input" placeholder="Search by name or county&hellip;" autocomplete="off" aria-label="Search by name or county">
+    <span class="dot-search-count" aria-live="polite"></span>
+</div>
 
 <p class="ds-key"></p>
 
@@ -278,12 +324,14 @@ html, body { margin: 0; padding: 0; background-color: transparent; }
     if (!root || root.dataset.ready) return;
     root.dataset.ready = "1";
 
+    var closeOpen = null;
+
     var SUPPRESSED_ONE = "Illinois Answers withheld this person’s name at the request of their family.";
     var SUPPRESSED_ALL = "Illinois Answers withheld the names of some of the deceased at the request of their families.";
 
     var STATUS_LABEL = {
-        counted: "Counted in the state's official total",
-        uncounted: "Never counted by the state",
+        counted: "Counted in state data",
+        uncounted: "Not initially counted in state data",
         unknown: "Counted status unrecorded"
     };
 
@@ -329,6 +377,20 @@ html, body { margin: 0; padding: 0; background-color: transparent; }
         return base.replace(/\/$/, "") + "/" + f.split("/").map(encodeURIComponent).join("/");
     }
 
+    var AP_MONTHS = ["Jan.", "Feb.", "March", "April", "May", "June",
+                     "July", "Aug.", "Sept.", "Oct.", "Nov.", "Dec."];
+
+    function fmtDeathDate(v) {
+        var m = /^(\d{1,2})\/(\d{1,2})\/(\d{2,4})$/.exec(String(v || "").trim());
+        if (!m) return "";
+        var mo = +m[1] - 1;
+        var day = +m[2];
+        var yr = +m[3];
+        if (mo < 0 || mo > 11 || !day) return "";
+        if (yr < 100) yr += 2000;
+        return AP_MONTHS[mo] + " " + day + ", " + yr;
+    }
+
     function statusOf(v) {
         if (v === "1") return "counted";
         if (v === "0") return "uncounted";
@@ -361,6 +423,7 @@ html, body { margin: 0; padding: 0; background-color: transparent; }
                 story: r.blurb || "",
                 photo: photoSrc(r.photo),
                 credit: r.photoCredit || "",
+                death: fmtDeathDate(r.death_date),
                 suppressed: String(r.idSuppressed || "").trim() !== "",
                 status: statusOf(r.counted)
             };
@@ -422,6 +485,7 @@ html, body { margin: 0; padding: 0; background-color: transparent; }
             if (d.age) b.dataset.age = d.age;
             if (d.photo) b.dataset.photo = d.photo;
             if (d.credit) b.dataset.credit = d.credit;
+            if (d.death) b.dataset.death = d.death;
             if (d.suppressed) b.dataset.suppressed = "1";
             if (d.story) b.dataset.story = d.story;
             if (d.startsYear) b.dataset.startsYear = d.startsYear;
@@ -443,6 +507,44 @@ html, body { margin: 0; padding: 0; background-color: transparent; }
         });
 
         wire(wrap, grid);
+        bindSearch(grid);
+    }
+
+    function bindSearch(grid) {
+        var box = root.querySelector("#dot-search-input");
+        var count = root.querySelector(".dot-search-count");
+        if (!box) return;
+        var all = [].slice.call(grid.querySelectorAll(".dot"));
+
+        function haystack(b) {
+            var d = b.dataset;
+            var bits = [d.name || "", d.county || ""];
+            if (d.county) bits.push(d.county + " County");
+            return bits.join(" ").toLowerCase();
+        }
+
+        var keys = all.map(haystack);
+
+        function apply() {
+            var q = box.value.trim().toLowerCase();
+            if (!q) {
+                all.forEach(function (b) { b.classList.remove("filtered-out"); b.disabled = false; });
+                count.textContent = "";
+                return;
+            }
+            var hits = 0;
+            all.forEach(function (b, i) {
+                var match = keys[i].indexOf(q) !== -1;
+                b.classList.toggle("filtered-out", !match);
+                b.disabled = !match;
+                if (match) hits++;
+            });
+            count.textContent = hits === 1 ? "1 match" : hits.toLocaleString("en-US") + " matches";
+            if (typeof closeOpen === "function") closeOpen(true);
+        }
+
+        box.addEventListener("input", apply);
+        box.addEventListener("search", apply);
     }
 
     function wire(wrap, grid) {
@@ -486,6 +588,12 @@ html, body { margin: 0; padding: 0; background-color: transparent; }
             pop.hidden = true;
         }
 
+        closeOpen = function (onlyIfHidden) {
+            if (!open) return;
+            if (onlyIfHidden && !open.classList.contains("filtered-out")) return;
+            close();
+        };
+
         function show(dot) {
             if (open === dot) return close();
             close();
@@ -498,12 +606,14 @@ html, body { margin: 0; padding: 0; background-color: transparent; }
             credit.hidden = !(d.photo && d.credit);
             credit.textContent = d.credit || "";
 
-            hed.textContent = d.name || (d.county ? d.county + " County" : d.statusLabel);
+            hed.hidden = !d.name;
+            hed.textContent = d.name || "";
+            pop.classList.toggle("no-hed", !d.name);
             var bits = [];
-            if (d.age) bits.push(d.age);
-            if (d.name && d.county) bits.push(d.county + " County");
-            bits.push(d.year || "Year unrecorded");
-            if (hed.textContent !== d.statusLabel && d.status !== "unknown") bits.push(d.statusLabel);
+            if (d.age) bits.push("Age " + d.age);
+            if (d.death) bits.push("Date of death: " + d.death);
+            if (d.county) bits.push("County jail: " + d.county);
+            if (d.status !== "unknown" && d.statusLabel) bits.push(d.statusLabel);
             meta.textContent = bits.join(" \u00b7 ");
 
             supp.hidden = !d.suppressed;
