@@ -120,6 +120,14 @@
     color: var(--aside);
 }
 #iap-pepperball-scroll .tl-row { transition: opacity .18s linear; }
+#iap-pepperball-scroll .tl-status {
+    font-family: var(--sans-sm);
+    font-size: 13px;
+    line-height: 1.5;
+    color: var(--aside);
+    padding: 14px 0 14px 66px;
+    margin: 0;
+}
 @media (max-width: 540px) {
     #iap-pepperball-scroll { padding: 24px 14px 30px 14px; }
     #iap-pepperball-scroll .tl-rail { width: 46px; }
@@ -133,6 +141,8 @@
     #iap-pepperball-scroll .tl-row { transition: none; }
 }
 </style>
+
+<p class="tl-status" id="tl-status">Timeline is loading&hellip; if this message remains, the embed&rsquo;s JavaScript is not running on this page.</p>
 
 <div class="tl">
     <div class="tl-rail">
@@ -186,6 +196,16 @@
         return new Date(y, +m[1] - 1, +m[2]);
     }
 
+    var status = root.querySelector("#tl-status");
+    if (status) status.parentNode.removeChild(status);
+
+    function fail(msg) {
+        var p = document.createElement("p");
+        p.className = "tl-status";
+        p.textContent = msg;
+        root.insertBefore(p, root.firstChild);
+    }
+
     var rail = root.querySelector(".tl-rail");
     var line = root.querySelector(".tl-line");
     var svg = root.querySelector(".tl-links");
@@ -213,7 +233,10 @@
         setTimeout(layout, 400);
         setTimeout(layout, 1200);
         bindFade();
-    }).catch(function () {});
+    }).catch(function (err) {
+        fail("Timeline data could not be loaded (" + (err && err.message ? err.message : "network error") +
+             "). The embed reached its script but could not fetch the CSV.");
+    });
 
     function build() {
         entries.forEach(function (e) {
