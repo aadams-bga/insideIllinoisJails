@@ -107,6 +107,12 @@
         stroke-width: 1px;
     }
 
+    .axis-title {
+        font-size: 11px;
+        font-weight: 600;
+        fill: #6E656A;
+        font-family: "Halyard Text", "halyard-text", "Inter", Arial, sans-serif;
+    }
     .axis-label {
         font-size: 11px;
         fill: #6E656A;
@@ -125,6 +131,17 @@
         line-height: 1.2;
     }
 
+    .marker-label {
+        font-family: "Halyard Text", "halyard-text", "Inter", Arial, sans-serif;
+        font-size: 11px;
+        font-weight: 600;
+        fill: #574F54;
+        paint-order: stroke;
+        stroke: #FFFFFF;
+        stroke-width: 3px;
+        stroke-linejoin: round;
+        pointer-events: none;
+    }
     .marker-rule {
         stroke: #1F161A;
         stroke-width: 1px;
@@ -156,25 +173,34 @@
         color: #1F161A;
         z-index: 100;
         line-height: 1.45;
-        max-width: 240px;
+        max-width: 265px;
     }
     #chart-tooltip .tooltip-header {
         font-weight: 700;
-        margin-bottom: 4px;
+        margin-bottom: 1px;
+    }
+    #chart-tooltip .tooltip-sub {
+        color: #6E656A;
+        font-size: 11px;
+        margin-bottom: 5px;
     }
     #chart-tooltip .tooltip-row {
         display: flex;
         align-items: baseline;
         gap: 6px;
-        white-space: nowrap;
     }
     #chart-tooltip .tooltip-swatch {
         width: 8px;
         height: 8px;
         flex: 0 0 auto;
     }
-    #chart-tooltip .tooltip-name { color: #574F54; }
-    #chart-tooltip .tooltip-value { font-weight: 700; margin-left: auto; }
+    #chart-tooltip .tooltip-name { color: #574F54; min-width: 0; }
+    #chart-tooltip .tooltip-value {
+        font-weight: 700;
+        margin-left: auto;
+        flex: 0 0 auto;
+        white-space: nowrap;
+    }
     #chart-tooltip .tooltip-missing { color: #8A827F; font-style: italic; }
     #chart-tooltip .tooltip-note { color: #574F54; white-space: normal; }
 
@@ -234,7 +260,7 @@
     </div>
 
     <footer class="graph-footer">
-        Chart: Andrew Adams, Illinois Answers Project &middot; Source: Illinois Answers Project analysis of state data &middot; <a href="https://cdn.jsdelivr.net/gh/aadams-bga/insideIllinoisJails@main/incidentsFollow/incidentsFollow.csv" target="_blank" rel="noopener">Download the data</a>
+        Chart: Andrew Adams, Illinois Answers Project &middot; Source: Illinois Answers Project analysis of Illinois Department of Corrections records &middot; <a href="https://cdn.jsdelivr.net/gh/aadams-bga/insideIllinoisJails@main/incidentsFollow/incidentsFollow.csv" target="_blank" rel="noopener">Download the data</a>
     </footer>
     <img src="https://raw.githubusercontent.com/aadams-bga/images/bffe8cc967881aeed4fbdee8328f4b2e056159b9/iaplogo.svg" class="iap-logo" alt="Illinois Answers Project logo">
 </div>
@@ -302,16 +328,6 @@
 
     function drawSeriesLabels(g, labels, dx, maxY) {
         placeSeriesLabels(labels, maxY).forEach(function (l) {
-            if (l.origY != null && Math.abs(l.y - l.origY) > 4) {
-                g.append("line")
-                    .attr("x1", l.x + 2)
-                    .attr("y1", l.origY)
-                    .attr("x2", l.x + dx - 3)
-                    .attr("y2", l.y)
-                    .attr("stroke", l.color)
-                    .attr("stroke-width", 1)
-                    .attr("stroke-opacity", 0.45);
-            }
             const text = g.append("text")
                 .attr("class", "series-label")
                 .attr("fill", l.color)
@@ -353,7 +369,7 @@
             const isMobile = width < 500;
             const height = isMobile ? 300 : 380;
             const margin = {
-                top: 12,
+                top: 26,
                 right: isMobile ? 12 : cfg.rightMargin,
                 bottom: 26,
                 left: isMobile ? 32 : 38
@@ -367,7 +383,9 @@
                 .attr("preserveAspectRatio", "xMinYMin meet");
 
             const x = d3.scaleTime()
-                .domain(d3.extent(data, d => d.date))
+                .domain(d3.extent(data.filter(function (d) {
+                    return cfg.series.some(function (s) { return d[s.key] !== null; });
+                }), d => d.date))
                 .range([0, innerWidth]);
 
             const maxVal = d3.max(data, d => d3.max(cfg.series, s => d[s.key]));
@@ -377,6 +395,12 @@
                 .nice();
 
             const g = svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+            g.append("text")
+                .attr("class", "axis-title")
+                .attr("x", 0)
+                .attr("y", -11)
+                .text("Number of monthly incidents");
 
             const yTicks = y.ticks(4);
             g.selectAll(".grid-line")
@@ -413,14 +437,23 @@
                 .text(d3.timeFormat("%Y"));
 
             (cfg.markers || []).forEach(function (m) {
-                const md = parseDate(m);
+                const md = parseDate(m.date || m);
                 if (!md) return;
+                const mx = x(md);
                 g.append("line")
                     .attr("class", "marker-rule")
-                    .attr("x1", x(md))
-                    .attr("x2", x(md))
+                    .attr("x1", mx)
+                    .attr("x2", mx)
                     .attr("y1", 0)
                     .attr("y2", innerHeight);
+                if (m.label && !isMobile) {
+                    g.append("text")
+                        .attr("class", "marker-label")
+                        .attr("x", mx - 7)
+                        .attr("y", 11)
+                        .attr("text-anchor", "end")
+                        .text(m.label);
+                }
             });
 
             const line = d3.line()
@@ -486,15 +519,19 @@
                         .attr("cy", s => y(d[s.key]))
                         .style("display", s => d[s.key] === null ? "none" : null);
 
+                    const shown = cfg.series.filter(function (s) { return d[s.key] !== null; });
+                    if (!shown.length) {
+                        tooltip.style("display", "none");
+                        return;
+                    }
+
                     let html = '<div class="tooltip-header">' + fmtMonth(d.date) + "</div>";
-                    cfg.series.forEach(function (s) {
-                        const v = d[s.key];
+                    html += '<div class="tooltip-sub">12-month rolling average</div>';
+                    shown.forEach(function (s) {
                         html += '<div class="tooltip-row">';
                         html += '<span class="tooltip-swatch" style="background:' + s.color + ";opacity:" + s.opacity + '"></span>';
                         html += '<span class="tooltip-name">' + esc(s.name) + "</span>";
-                        html += v === null
-                            ? '<span class="tooltip-value tooltip-missing">no data</span>'
-                            : '<span class="tooltip-value">' + Math.round(v).toLocaleString("en-US") + "</span>";
+                        html += '<span class="tooltip-value">' + Math.round(d[s.key]).toLocaleString("en-US") + "</span>";
                         html += "</div>";
                     });
                     tooltip.style("display", "block").html(html);
@@ -508,10 +545,10 @@
         dateField: "year month",
         yStep: 100,
         rightMargin: 96,
-        markers: ["7/1/2024"],
+        markers: [{ date: "7/1/2024", label: "Illinois Answers publishes investigation" }],
         series: [
-            { key: "downAvg", field: "Suburban and downstate rolling average", name: "Suburban and downstate, 12-month average", color: MAROON, width: 2.5, opacity: 1, label: ["Suburban and", "downstate"] },
-            { key: "cookAvg", field: "Cook County rolling average", name: "Cook County, 12-month average", color: STEEL, width: 2.5, opacity: 1, label: ["Cook County"] }
+            { key: "downAvg", field: "Suburban and downstate rolling average", name: "Suburban and downstate", color: MAROON, width: 2.5, opacity: 1, label: ["Suburban and", "downstate"] },
+            { key: "cookAvg", field: "Cook County rolling average", name: "Cook County", color: STEEL, width: 2.5, opacity: 1, label: ["Cook County"] }
         ]
     });
 

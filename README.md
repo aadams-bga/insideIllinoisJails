@@ -12,6 +12,7 @@
 - [inCustodyDeaths](https://aadams-bga.github.io/insideIllinoisJails/inCustodyDeaths/)
 - [countyLineTransfer](https://aadams-bga.github.io/insideIllinoisJails/countyLineTransfer/)
 - [pepperballScroll](https://aadams-bga.github.io/insideIllinoisJails/pepperballScroll/)
+- [pepperballPolicy](https://aadams-bga.github.io/insideIllinoisJails/pepperballPolicy/)
 
 ```html
 <iframe
@@ -46,6 +47,7 @@
 <iframe id="mannerAndCause"      src="https://aadams-bga.github.io/insideIllinoisJails/mannerAndCause/"      height="653" loading="lazy" scrolling="no" frameborder="0" style="display:block;width:100%;border:0;overflow:hidden"></iframe>
 <iframe id="regulatoryModels"    src="https://aadams-bga.github.io/insideIllinoisJails/regulatoryModels/"    height="668" loading="lazy" scrolling="no" frameborder="0" style="display:block;width:100%;border:0;overflow:hidden"></iframe>
 <iframe id="pepperballMap"       src="https://aadams-bga.github.io/insideIllinoisJails/pepperballMap/"       height="780" loading="lazy" scrolling="no" frameborder="0" style="display:block;width:100%;border:0;overflow:hidden"></iframe>
+<iframe id="pepperballPolicy"   src="https://aadams-bga.github.io/insideIllinoisJails/pepperballPolicy/"   height="455" loading="lazy" scrolling="no" frameborder="0" style="display:block;width:100%;border:0;overflow:hidden"></iframe>
 <iframe id="inspectionMap"       src="https://aadams-bga.github.io/insideIllinoisJails/inspectionMap/"       height="794" loading="lazy" scrolling="no" frameborder="0" style="display:block;width:100%;border:0;overflow:hidden"></iframe>
 <iframe id="inCustodyDeaths"     src="https://aadams-bga.github.io/insideIllinoisJails/inCustodyDeaths/"     height="838" loading="lazy" scrolling="no" frameborder="0" style="display:block;width:100%;border:0;overflow:hidden"></iframe>
 <iframe id="countyLineTransfer"  src="https://aadams-bga.github.io/insideIllinoisJails/countyLineTransfer/"  height="940" loading="lazy" scrolling="no" frameborder="0" style="display:block;width:100%;border:0;overflow:hidden"></iframe>

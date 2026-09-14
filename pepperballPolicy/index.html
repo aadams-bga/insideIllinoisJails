@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pepperball launcher policies by county</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+    html, body {
+        margin: 0;
+        padding: 0;
+        background-color: transparent;
+    }
+    body { display: block; }
+    #chart-container-wrapper {
+        font-family: "Halyard Text", "halyard-text", "Inter", Arial, sans-serif;
+        max-width: 640px;
+        width: 100%;
+        min-width: 0;
+        margin: 0 auto;
+        position: relative;
+        background-color: transparent;
+        color: #1F161A;
+        padding: 20px 20px 30px 20px;
+        box-sizing: border-box;
+    }
+    #chart-container-wrapper *, #chart-container-wrapper *::before, #chart-container-wrapper *::after { box-sizing: border-box; }
+    #chart-container-wrapper h1 {
+        font-size: 22px;
+        font-weight: 700;
+        margin: 0 0 8px 0;
+        line-height: 1.25;
+        letter-spacing: -0.01em;
+    }
+    #chart-container-wrapper p.subtitle {
+        font-size: 14px;
+        color: #574F54;
+        line-height: 1.45;
+        margin: 0 0 18px 0;
+    }
+
+    .select-wrapper { margin-bottom: 18px; }
+    .custom-combobox { position: relative; width: 100%; }
+
+    #county-input {
+        width: 100%;
+        padding: 12px 38px 12px 13px;
+        font-family: inherit;
+        font-size: 15px;
+        color: #1F161A;
+        border: 1px solid #B9B0AB;
+        background-color: #FFFFFF;
+        border-radius: 3px;
+    }
+    #county-input:focus {
+        outline: none;
+        border-color: #53646D;
+        box-shadow: 0 0 0 2px rgba(83, 100, 109, 0.22);
+    }
+    .chevron {
+        position: absolute;
+        right: 14px;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 10px;
+        color: #6E656A;
+        pointer-events: none;
+    }
+
+    #county-list {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: #FFFFFF;
+        border: 1px solid #B9B0AB;
+        border-top: none;
+        max-height: 250px;
+        overflow-y: auto;
+        z-index: 1000;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+        box-shadow: 0 10px 24px rgba(31, 22, 26, 0.14);
+    }
+    #county-list li {
+        padding: 9px 14px;
+        font-size: 14px;
+        cursor: pointer;
+        border-bottom: 1px solid #EFEAE6;
+        border-left: 4px solid transparent;
+    }
+    #county-list li:last-child { border-bottom: none; }
+    #county-list li:hover, #county-list li.highlighted {
+        background-color: #EEF1F3;
+        border-left-color: #53646D;
+    }
+    #county-list li.no-match {
+        color: #6E656A;
+        font-style: italic;
+        cursor: default;
+        border-left-color: transparent;
+        background: none;
+    }
+    .hidden { display: none !important; }
+
+    .results-box {
+        padding: 20px 22px;
+        background: #FFFFFF;
+        border: 1px solid #DCD4CE;
+        border-left: 6px solid #DCD4CE;
+        border-radius: 3px;
+        min-height: 132px;
+    }
+    .results-box.active { border-left-color: #53646D; }
+    .empty-state {
+        color: #8A827F;
+        font-style: italic;
+        font-size: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 90px;
+    }
+    .county-name-label {
+        font-size: 12px;
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+        font-weight: 700;
+        color: #FFFFFF;
+        background: #53646D;
+        padding: 3px 9px;
+        margin-bottom: 13px;
+        display: inline-block;
+    }
+    .finding-text p {
+        font-size: 15px;
+        line-height: 1.55;
+        margin: 0 0 0.9rem 0;
+    }
+    .finding-text p:last-child { margin-bottom: 0; }
+    .finding-text a { color: #53646D; text-decoration: underline; }
+    .finding-text a:hover { color: #1F161A; }
+
+    .graph-footer {
+        margin-top: 20px;
+        padding-top: 12px;
+        border-top: 1px solid #DCD4CE;
+        font-size: 11px;
+        color: #6E656A;
+        line-height: 1.4;
+    }
+    .graph-footer a { color: inherit; text-decoration: underline; }
+
+    @media (max-width: 500px) {
+        #chart-container-wrapper { padding: 15px 15px 25px 15px; }
+        #chart-container-wrapper h1 { font-size: 18px; }
+        #chart-container-wrapper p.subtitle { font-size: 12.5px; }
+        #county-input { font-size: 14px; }
+        .finding-text p { font-size: 14px; }
+        .results-box { padding: 16px 16px; }
+        .graph-footer { font-size: 10px; }
+    }
+</style>
+</head>
+<body>
+
+<div id="chart-container-wrapper">
+
+    <h1>Lorem ipsum dolor sit amet consectetur adipiscing elit sed pepperball</h1>
+    <p class="subtitle">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Select a county below to see what the records show.</p>
+
+    <div class="select-wrapper">
+        <div class="custom-combobox">
+            <input type="text" id="county-input" placeholder="Type or choose a county&hellip;" autocomplete="off"
+                role="combobox" aria-expanded="false" aria-controls="county-list" aria-autocomplete="list">
+            <div class="chevron" aria-hidden="true">&#9660;</div>
+            <ul id="county-list" class="hidden" role="listbox" aria-label="Counties"></ul>
+        </div>
+    </div>
+
+    <div class="results-box" id="results-area" aria-live="polite">
+        <div class="empty-state">Select a county above</div>
+    </div>
+
+    <footer class="graph-footer">
+        Table: Andrew Adams, Illinois Answers Project &middot; Source: Illinois Answers Project analysis of county records &middot; <a href="https://cdn.jsdelivr.net/gh/aadams-bga/insideIllinoisJails@main/pepperballPolicy/pepperballPolicy.csv" target="_blank" rel="noopener">Download the data</a>
+    </footer>
+</div>
+
+<script>
+(function () {
+    var input = document.getElementById("county-input");
+    var list = document.getElementById("county-list");
+    var results = document.getElementById("results-area");
+
+    var counties = [];
+    var filtered = [];
+    var highlighted = -1;
+
+    function parseCSV(text) {
+        var rows = [], row = [], field = "", quoted = false, i = 0;
+        text = text.replace(/^﻿/, "");
+        while (i < text.length) {
+            var c = text[i];
+            if (quoted) {
+                if (c === '"') {
+                    if (text[i + 1] === '"') { field += '"'; i += 2; continue; }
+                    quoted = false; i++; continue;
+                }
+                field += c; i++; continue;
+            }
+            if (c === '"') { quoted = true; i++; continue; }
+            if (c === ",") { row.push(field); field = ""; i++; continue; }
+            if (c === "\r") { i++; continue; }
+            if (c === "\n") { row.push(field); rows.push(row); row = []; field = ""; i++; continue; }
+            field += c; i++;
+        }
+        if (field.length || row.length) { row.push(field); rows.push(row); }
+        if (!rows.length) return [];
+        var head = rows.shift().map(function (h) { return h.trim(); });
+        return rows.filter(function (r) {
+            return r.some(function (v) { return String(v).trim() !== ""; });
+        }).map(function (r) {
+            var o = {};
+            head.forEach(function (h, n) { o[h] = (r[n] == null ? "" : String(r[n]).trim()); });
+            return o;
+        });
+    }
+
+    function esc(s) {
+        return String(s == null ? "" : s).replace(/[&<>"]/g, function (c) {
+            return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c];
+        });
+    }
+
+    function buildSentence(county, s1) {
+        var t = String(s1 || "").trim().replace(/^has\s+/i, "");
+        if (!t) return "";
+        t = t.replace(/\.$/, "");
+        return esc(county) + " has " + esc(t) + ".";
+    }
+
+    fetch("pepperballPolicy.csv").then(function (r) {
+        if (!r.ok) throw new Error(r.status);
+        return r.text();
+    }).then(function (text) {
+        counties = parseCSV(text).filter(function (r) { return r.County; })
+            .sort(function (a, b) { return a.County.localeCompare(b.County); });
+        bind();
+        sendHeight();
+    }).catch(function () {
+        results.innerHTML = '<div class="empty-state">County data could not be loaded.</div>';
+    });
+
+    function renderList(items) {
+        filtered = items;
+        highlighted = -1;
+        if (!items.length) {
+            list.innerHTML = '<li class="no-match">No county by that name</li>';
+            list.classList.remove("hidden");
+            input.setAttribute("aria-expanded", "true");
+            sendHeight();
+            return;
+        }
+        list.innerHTML = items.map(function (c, i) {
+            return '<li role="option" data-i="' + i + '">' + esc(c.County) + "</li>";
+        }).join("");
+        list.classList.remove("hidden");
+        input.setAttribute("aria-expanded", "true");
+        sendHeight();
+    }
+
+    function closeList() {
+        list.classList.add("hidden");
+        input.setAttribute("aria-expanded", "false");
+        highlighted = -1;
+        sendHeight();
+    }
+
+    function setHighlight(n) {
+        var items = list.querySelectorAll("li:not(.no-match)");
+        if (!items.length) return;
+        highlighted = (n + items.length) % items.length;
+        items.forEach(function (el, i) { el.classList.toggle("highlighted", i === highlighted); });
+        items[highlighted].scrollIntoView({ block: "nearest" });
+    }
+
+    function select(county) {
+        input.value = county.County;
+        closeList();
+
+        var html = '<span class="county-name-label">' + esc(county.County) + "</span>";
+        html += '<div class="finding-text">';
+        var s1 = buildSentence(county.County, county.sentence1);
+        if (s1) html += "<p>" + s1 + "</p>";
+
+        var s2 = String(county.sentence2 || "").trim();
+        var link = String(county.link || "").trim();
+        if (s2) {
+            var body = esc(s2.replace(/\.$/, ""));
+            html += "<p>" + (link
+                ? '<a href="' + esc(link) + '" target="_blank" rel="noopener">' + body + "</a>."
+                : body + ".") + "</p>";
+        }
+        html += "</div>";
+
+        results.innerHTML = html;
+        results.classList.add("active");
+        sendHeight();
+    }
+
+    function bind() {
+        input.addEventListener("focus", function () {
+            renderList(counties);
+        });
+
+        input.addEventListener("input", function () {
+            var q = input.value.trim().toLowerCase();
+            renderList(!q ? counties : counties.filter(function (c) {
+                return c.County.toLowerCase().indexOf(q) !== -1;
+            }));
+        });
+
+        input.addEventListener("keydown", function (e) {
+            var open = !list.classList.contains("hidden");
+            if (e.key === "ArrowDown") { e.preventDefault(); if (!open) renderList(counties); setHighlight(highlighted + 1); }
+            else if (e.key === "ArrowUp") { e.preventDefault(); setHighlight(highlighted - 1); }
+            else if (e.key === "Enter") {
+                e.preventDefault();
+                if (open && highlighted >= 0 && filtered[highlighted]) select(filtered[highlighted]);
+                else if (open && filtered.length === 1) select(filtered[0]);
+            }
+            else if (e.key === "Escape") { closeList(); input.blur(); }
+        });
+
+        list.addEventListener("mousedown", function (e) {
+            var li = e.target.closest("li[data-i]");
+            if (!li) return;
+            e.preventDefault();
+            select(filtered[+li.dataset.i]);
+        });
+
+        document.addEventListener("click", function (e) {
+            if (!e.target.closest(".custom-combobox")) closeList();
+        });
+    }
+
+    var last = 0;
+    function sendHeight() {
+        if (window.parent === window) return;
+        var h = Math.ceil(document.documentElement.getBoundingClientRect().height);
+        if (!list.classList.contains("hidden")) {
+            var b = list.getBoundingClientRect();
+            h = Math.max(h, Math.ceil(b.bottom + window.scrollY + 16));
+        }
+        if (!h || Math.abs(h - last) < 2) return;
+        last = h;
+        window.parent.postMessage({ type: "iap-graphic-height", id: "pepperballPolicy", height: h }, "*");
+    }
+
+    window.addEventListener("load", sendHeight);
+    window.addEventListener("resize", sendHeight);
+    if (window.ResizeObserver) new ResizeObserver(sendHeight).observe(document.body);
+    setTimeout(sendHeight, 300);
+    setTimeout(sendHeight, 1200);
+})();
+</script>
+</body>
+</html>

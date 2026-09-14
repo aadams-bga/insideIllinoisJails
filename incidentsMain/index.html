@@ -107,6 +107,12 @@
         stroke-width: 1px;
     }
 
+    .axis-title {
+        font-size: 11px;
+        font-weight: 600;
+        fill: #6E656A;
+        font-family: "Halyard Text", "halyard-text", "Inter", Arial, sans-serif;
+    }
     .axis-label {
         font-size: 11px;
         fill: #6E656A;
@@ -316,16 +322,6 @@
 
     function drawSeriesLabels(g, labels, dx, maxY) {
         placeSeriesLabels(labels, maxY).forEach(function (l) {
-            if (l.origY != null && Math.abs(l.y - l.origY) > 4) {
-                g.append("line")
-                    .attr("x1", l.x + 2)
-                    .attr("y1", l.origY)
-                    .attr("x2", l.x + dx - 3)
-                    .attr("y2", l.y)
-                    .attr("stroke", l.color)
-                    .attr("stroke-width", 1)
-                    .attr("stroke-opacity", 0.45);
-            }
             const text = g.append("text")
                 .attr("class", "series-label")
                 .attr("fill", l.color)
@@ -367,7 +363,7 @@
             const isMobile = width < 500;
             const height = isMobile ? 300 : 380;
             const margin = {
-                top: 12,
+                top: 26,
                 right: isMobile ? 12 : cfg.rightMargin,
                 bottom: 26,
                 left: isMobile ? 32 : 38
@@ -391,6 +387,12 @@
                 .nice();
 
             const g = svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+            g.append("text")
+                .attr("class", "axis-title")
+                .attr("x", 0)
+                .attr("y", -11)
+                .text("Number of monthly incidents");
 
             const yTicks = y.ticks(4);
             g.selectAll(".grid-line")
