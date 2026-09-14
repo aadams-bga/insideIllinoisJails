@@ -257,7 +257,8 @@
     </div>
 
     <footer class="graph-footer">
-        Map: Andrew Adams, Illinois Answers Project &middot; Source: Illinois Answers Project analysis of state data &middot; <a href="https://cdn.jsdelivr.net/gh/aadams-bga/insideIllinoisJails@main/inspectionMap/inspectionMap.csv" target="_blank" rel="noopener">Download the data</a>
+        <div class="footer-note">Some jails have closed permanently or temporarily and have fewer inspections than others.</div>
+        Map: Andrew Adams, Illinois Answers Project &middot; Source: Illinois Answers Project analysis of Illinois Department of Corrections records &middot; <a href="https://cdn.jsdelivr.net/gh/aadams-bga/insideIllinoisJails@main/inspectionMap/inspectionMap.csv" target="_blank" rel="noopener">Download the data</a>
     </footer>
     <img src="https://raw.githubusercontent.com/aadams-bga/images/bffe8cc967881aeed4fbdee8328f4b2e056159b9/iaplogo.svg" class="iap-logo" alt="Illinois Answers Project logo">
 </div>
@@ -387,16 +388,22 @@
         const topo = results[0];
         counties = topojson.feature(topo, topo.objects.counties).features;
 
-        const years = d3.rollup(
-            results[1].filter(d => num(d.noncompliant) === 1),
-            v => new Set(v.map(d => String(d.year).trim())).size,
-            d => normCounty(d.county)
-        );
-        const inspected = new Set(results[1].map(d => normCounty(d.county)));
+        const inspections = results[1].filter(function (d) {
+            return String(d.status || "").trim().toUpperCase() !== "ERR";
+        });
+        const countYears = function (rows) {
+            return d3.rollup(
+                rows,
+                v => new Set(v.map(d => String(d.year).trim())).size,
+                d => normCounty(d.county)
+            );
+        };
+        const failedYears = countYears(inspections.filter(d => num(d.noncompliant) === 1));
+        const onRecord = countYears(inspections);
 
         lookup = new Map();
-        inspected.forEach(function (name) {
-            lookup.set(name, years.get(name) || 0);
+        onRecord.forEach(function (total, name) {
+            lookup.set(name, { failed: failedYears.get(name) || 0, total: total });
         });
 
         render();
@@ -446,7 +453,7 @@
             .attr("d", path)
             .attr("fill", function (d) {
                 const v = lookup.get(d.properties.name);
-                return v === undefined ? "url(#no-records)" : ramp(v);
+                return v === undefined ? "url(#no-records)" : ramp(v.failed);
             })
             .on("mouseenter mousemove", function (event, d) {
                 const v = lookup.get(d.properties.name);
@@ -454,7 +461,10 @@
                 let html = '<div class="tooltip-header">' + esc(d.properties.name) + " County</div>";
                 html += v === undefined
                     ? '<div class="tooltip-note">No inspection records</div>'
-                    : '<div class="tooltip-note">' + v + (v === 1 ? " year" : " years") + " out of compliance, 2017&ndash;2025</div>";
+                    : '<div class="tooltip-note">' + v.failed
+                        + (v.failed === 1 ? " inspection failed" : " inspections failed")
+                        + " out of " + v.total
+                        + (v.total === 1 ? " year" : " years") + "</div>";
                 tooltip.style("display", "block").html(html);
                 placeTooltip(event, width, height);
             })
