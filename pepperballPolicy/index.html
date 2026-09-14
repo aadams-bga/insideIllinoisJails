@@ -30,16 +30,14 @@
     }
     #chart-container-wrapper *, #chart-container-wrapper *::before, #chart-container-wrapper *::after { box-sizing: border-box; }
     #chart-container-wrapper h1 {
-        font-size: 22px;
+        display: inline-block;
+        font-size: 20px;
         font-weight: 700;
-        margin: 0 0 8px 0;
-        line-height: 1.25;
+        line-height: 1.3;
         letter-spacing: -0.01em;
-    }
-    #chart-container-wrapper p.subtitle {
-        font-size: 14px;
-        color: #574F54;
-        line-height: 1.45;
+        color: #FFFFFF;
+        background: #53646D;
+        padding: 7px 12px;
         margin: 0 0 18px 0;
     }
 
@@ -112,11 +110,9 @@
         padding: 20px 22px;
         background: #FFFFFF;
         border: 1px solid #DCD4CE;
-        border-left: 6px solid #DCD4CE;
         border-radius: 3px;
         min-height: 132px;
     }
-    .results-box.active { border-left-color: #53646D; }
     .empty-state {
         color: #8A827F;
         font-style: italic;
@@ -146,24 +142,13 @@
     .finding-text a { color: #53646D; text-decoration: underline; }
     .finding-text a:hover { color: #1F161A; }
 
-    .graph-footer {
-        margin-top: 20px;
-        padding-top: 12px;
-        border-top: 1px solid #DCD4CE;
-        font-size: 11px;
-        color: #6E656A;
-        line-height: 1.4;
-    }
-    .graph-footer a { color: inherit; text-decoration: underline; }
 
     @media (max-width: 500px) {
         #chart-container-wrapper { padding: 15px 15px 25px 15px; }
-        #chart-container-wrapper h1 { font-size: 18px; }
-        #chart-container-wrapper p.subtitle { font-size: 12.5px; }
+        #chart-container-wrapper h1 { font-size: 17px; padding: 6px 10px; }
         #county-input { font-size: 14px; }
         .finding-text p { font-size: 14px; }
         .results-box { padding: 16px 16px; }
-        .graph-footer { font-size: 10px; }
     }
 </style>
 </head>
@@ -171,8 +156,7 @@
 
 <div id="chart-container-wrapper">
 
-    <h1>Lorem ipsum dolor sit amet consectetur adipiscing elit sed pepperball</h1>
-    <p class="subtitle">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Select a county below to see what the records show.</p>
+    <h1>Search for a county&rsquo;s policy on the use of pepperball launchers</h1>
 
     <div class="select-wrapper">
         <div class="custom-combobox">
@@ -187,9 +171,6 @@
         <div class="empty-state">Select a county above</div>
     </div>
 
-    <footer class="graph-footer">
-        Table: Andrew Adams, Illinois Answers Project &middot; Source: Illinois Answers Project analysis of county records &middot; <a href="https://cdn.jsdelivr.net/gh/aadams-bga/insideIllinoisJails@main/pepperballPolicy/pepperballPolicy.csv" target="_blank" rel="noopener">Download the data</a>
-    </footer>
 </div>
 
 <script>
@@ -310,7 +291,6 @@
         html += "</div>";
 
         results.innerHTML = html;
-        results.classList.add("active");
         sendHeight();
     }
 

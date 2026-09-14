@@ -223,8 +223,8 @@
 
 <div id="chart-container-wrapper">
 
-    <h1>Across several categories of incident, Cook County has wildly variable reporting practices</h1>
-    <p class="subtitle">After Illinois Answers published an investigation into the use of restraint chairs in Cook County &mdash; and their failures in following state reporting requirements &mdash; the largest jail in Illinois dramatically shifted its reporting of several types of incident. While most categories of &lsquo;extraordinary or unusual&rsquo; incident returned to normal the next year, at least one continues to rise.</p>
+    <h1>Across several incident categories, Cook County Jail has variable reporting practices</h1>
+    <p class="subtitle">After Illinois Answers&rsquo; investigation into the use of restraint chairs and Cook County Jail&rsquo;s failures to follow state reporting requirements, the jail&rsquo;s reports of several incident types suddenly increased. While most of the sudden increases of &lsquo;extraordinary or unusual&rsquo; incident reports subsided the following year, one &mdash; the use of chemical irritant &ldquo;OC&rdquo; spray &mdash; continued a more steady rise.</p>
 
     <div id="chart-wrapper" style="position: relative;">
         <div id="chart-container">
@@ -234,7 +234,7 @@
     </div>
 
     <footer class="graph-footer">
-        Chart: Andrew Adams, Illinois Answers Project &middot; Source: Illinois Answers Project analysis of state data &middot; <a href="https://cdn.jsdelivr.net/gh/aadams-bga/insideIllinoisJails@main/cookIncidents/cookIncidents.csv" target="_blank" rel="noopener">Download the data</a>
+        Chart: Andrew Adams, Illinois Answers Project &middot; Source: Illinois Answers Project analysis of Illinois Department of Corrections records &middot; <a href="https://cdn.jsdelivr.net/gh/aadams-bga/insideIllinoisJails@main/cookIncidents/cookIncidents.csv" target="_blank" rel="noopener">Download the data</a>
     </footer>
     <img src="https://raw.githubusercontent.com/aadams-bga/images/bffe8cc967881aeed4fbdee8328f4b2e056159b9/iaplogo.svg" class="iap-logo" alt="Illinois Answers Project logo">
 </div>
@@ -242,6 +242,9 @@
 <script>
 (function () {
     const MAROON = "#8A2C38";
+    const STEEL_1 = "#617079";
+    const STEEL_2 = "#838F96";
+    const STEEL_3 = "#A9B2B6";
     const STEEL = "#53646D";
     const AMBER = "#C06621";
     const SAGE = "#353B32";
@@ -511,9 +514,9 @@
         markers: ["7/1/2024"],
         series: [
             { key: "oc", field: "OCSpray", name: "OC spray", color: MAROON, width: 2, opacity: 1, label: ["OC spray"] },
-            { key: "injury", field: "seriousInjury", name: "Serious injury", color: STEEL, width: 2, opacity: 1, label: ["Serious injury"] },
-            { key: "forced", field: "forcedMEd", name: "Forced medication", color: AMBER, width: 2, opacity: 1, label: ["Forced", "medication"] },
-            { key: "suicide", field: "suicideAttempts", name: "Suicide attempts", color: SAGE, width: 2, opacity: 1, label: ["Suicide", "attempts"] }
+            { key: "injury", field: "seriousInjury", name: "Serious injury", color: STEEL_1, width: 2, opacity: 1, label: ["Serious injury"] },
+            { key: "forced", field: "forcedMEd", name: "Forced medication", color: STEEL_2, width: 2, opacity: 1, label: ["Forced", "medication"] },
+            { key: "suicide", field: "suicideAttempts", name: "Suicide attempts", color: STEEL_3, width: 2, opacity: 1, label: ["Suicide", "attempts"] }
         ]
     });
 
