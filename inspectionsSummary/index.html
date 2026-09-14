@@ -224,10 +224,10 @@
 <div id="chart-container-wrapper">
 
     <h1>Jails have failed hundreds of inspections, including 52 last year</h1>
-    <p class="subtitle">Illinois&rsquo; roughly 90 county jails have been cited for noncompliance nearly 1,100 times since 2017. The most frequent categories relate to staffing, but failures involving commissary management and housing are common.</p>
+    <p class="subtitle">Illinois county jails have been cited for noncompliance nearly 1,100 times since 2017. The most frequent violations relate to staffing, but failures involving commissary management and housing are also common.</p>
 
     <div id="chart-legend">
-        <span class="legend-item"><span class="legend-swatch" style="background:#53646D"></span>All violations since 2017</span>
+        <span class="legend-item"><span class="legend-swatch" style="background:#BE8A91"></span>All violations since 2017</span>
         <span class="legend-item"><span class="legend-swatch" style="background:#8A2C38"></span>Violations in 2025</span>
     </div>
 
@@ -239,7 +239,7 @@
     </div>
 
     <footer class="graph-footer">
-        Chart: Andrew Adams, Illinois Answers Project &middot; Source: Illinois Answers Project analysis of state data &middot; <a href="https://cdn.jsdelivr.net/gh/aadams-bga/insideIllinoisJails@main/inspectionsSummary/inspectionsSummary.csv" target="_blank" rel="noopener">Download the data</a>
+        Chart: Andrew Adams, Illinois Answers Project &middot; Source: Illinois Answers Project analysis of Illinois Department of Corrections records &middot; <a href="https://cdn.jsdelivr.net/gh/aadams-bga/insideIllinoisJails@main/inspectionsSummary/inspectionsSummary.csv" target="_blank" rel="noopener">Download the data</a>
     </footer>
     <img src="https://raw.githubusercontent.com/aadams-bga/images/bffe8cc967881aeed4fbdee8328f4b2e056159b9/iaplogo.svg" class="iap-logo" alt="Illinois Answers Project logo">
 </div>
@@ -247,6 +247,7 @@
 <script>
 (function () {
     const MAROON = "#8A2C38";
+    const MAROON_LIGHT = "#BE8A91";
     const STEEL = "#53646D";
     const AMBER = "#C06621";
     const SAGE = "#353B32";
@@ -350,7 +351,7 @@
     };
 
     const SERIES = [
-        { key: "all", field: "violations_allYears", name: "All violations since 2017", color: STEEL },
+        { key: "all", field: "violations_allYears", name: "All violations since 2017", color: MAROON_LIGHT },
         { key: "y2025", field: "violations_2025", name: "Violations in 2025", color: MAROON }
     ];
 

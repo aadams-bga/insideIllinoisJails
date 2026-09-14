@@ -156,25 +156,34 @@
         color: #1F161A;
         z-index: 100;
         line-height: 1.45;
-        max-width: 240px;
+        max-width: 265px;
     }
     #chart-tooltip .tooltip-header {
         font-weight: 700;
-        margin-bottom: 4px;
+        margin-bottom: 1px;
+    }
+    #chart-tooltip .tooltip-sub {
+        color: #6E656A;
+        font-size: 11px;
+        margin-bottom: 5px;
     }
     #chart-tooltip .tooltip-row {
         display: flex;
         align-items: baseline;
         gap: 6px;
-        white-space: nowrap;
     }
     #chart-tooltip .tooltip-swatch {
         width: 8px;
         height: 8px;
         flex: 0 0 auto;
     }
-    #chart-tooltip .tooltip-name { color: #574F54; }
-    #chart-tooltip .tooltip-value { font-weight: 700; margin-left: auto; }
+    #chart-tooltip .tooltip-name { color: #574F54; min-width: 0; }
+    #chart-tooltip .tooltip-value {
+        font-weight: 700;
+        margin-left: auto;
+        flex: 0 0 auto;
+        white-space: nowrap;
+    }
     #chart-tooltip .tooltip-missing { color: #8A827F; font-style: italic; }
     #chart-tooltip .tooltip-note { color: #574F54; white-space: normal; }
 
@@ -239,7 +248,7 @@
     </div>
 
     <footer class="graph-footer">
-        Chart: Andrew Adams, Illinois Answers Project &middot; Source: Illinois Answers Project analysis of state data &middot; <a href="https://cdn.jsdelivr.net/gh/aadams-bga/insideIllinoisJails@main/incidentsMain/incidentsMain.csv" target="_blank" rel="noopener">Download the data</a>
+        Chart: Andrew Adams, Illinois Answers Project &middot; Source: Illinois Answers Project analysis of Illinois Department of Corrections records &middot; <a href="https://cdn.jsdelivr.net/gh/aadams-bga/insideIllinoisJails@main/incidentsMain/incidentsMain.csv" target="_blank" rel="noopener">Download the data</a>
     </footer>
     <img src="https://raw.githubusercontent.com/aadams-bga/images/bffe8cc967881aeed4fbdee8328f4b2e056159b9/iaplogo.svg" class="iap-logo" alt="Illinois Answers Project logo">
 </div>
@@ -462,8 +471,10 @@
 
             const hoverG = g.append("g").style("display", "none");
             hoverG.append("line").attr("class", "hover-rule").attr("y1", 0).attr("y2", innerHeight);
+            const tipSeries = cfg.series.filter(function (s) { return s.tip; });
+
             const hoverDots = hoverG.selectAll(".hover-dot")
-                .data(cfg.series)
+                .data(tipSeries)
                 .enter()
                 .append("circle")
                 .attr("class", "hover-dot")
@@ -492,7 +503,8 @@
                         .style("display", s => d[s.key] === null ? "none" : null);
 
                     let html = '<div class="tooltip-header">' + fmtMonth(d.date) + "</div>";
-                    cfg.series.forEach(function (s) {
+                    html += '<div class="tooltip-sub">12-month rolling average</div>';
+                    tipSeries.forEach(function (s) {
                         const v = d[s.key];
                         html += '<div class="tooltip-row">';
                         html += '<span class="tooltip-swatch" style="background:' + s.color + ";opacity:" + s.opacity + '"></span>';
@@ -516,8 +528,8 @@
         series: [
             { key: "downMonthly", field: "Suburban and downstate number", name: "Suburban and downstate, monthly", color: MAROON, width: 1, opacity: 0.38 },
             { key: "cookMonthly", field: "Cook County number", name: "Cook County, monthly", color: STEEL, width: 1, opacity: 0.38 },
-            { key: "downAvg", field: "Suburban and downstate rolling average", name: "Suburban and downstate, 12-month average", color: MAROON, width: 2.5, opacity: 1, label: ["Suburban and", "downstate"] },
-            { key: "cookAvg", field: "Cook County rolling average", name: "Cook County, 12-month average", color: STEEL, width: 2.5, opacity: 1, label: ["Cook County"] }
+            { key: "downAvg", field: "Suburban and downstate rolling average", name: "Suburban and downstate", tip: true, color: MAROON, width: 2.5, opacity: 1, label: ["Suburban and", "downstate"] },
+            { key: "cookAvg", field: "Cook County rolling average", name: "Cook County", tip: true, color: STEEL, width: 2.5, opacity: 1, label: ["Cook County"] }
         ]
     });
 
