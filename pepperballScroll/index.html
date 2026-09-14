@@ -339,14 +339,17 @@ html, body { margin: 0; padding: 0; background: #14243F; }
     }
 
     function bindFade() {
-        var queued = false;
+        var pending = false;
+        function run() { pending = false; fade(); }
         function onScroll() {
-            if (!window.requestAnimationFrame) { fade(); return; }
-            if (queued) return;
-            queued = true;
-            window.requestAnimationFrame(function () { queued = false; fade(); });
+            if (pending) return;
+            pending = true;
+            if (window.requestAnimationFrame) window.requestAnimationFrame(run);
+            else setTimeout(run, 16);
+            setTimeout(function () { if (pending) run(); }, 250);
         }
         window.addEventListener("scroll", onScroll, { passive: true });
+        document.addEventListener("scroll", onScroll, true);
         window.addEventListener("resize", onScroll);
         fade();
     }

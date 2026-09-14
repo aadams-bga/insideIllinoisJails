@@ -182,7 +182,8 @@ html, body { margin: 0; padding: 0; background-color: transparent; }
 #iap-custody-dots .dot-pop {
     position: absolute;
     z-index: 50;
-    width: min(17.5rem, 100%);
+    width: 21rem;
+    max-width: none;
     background: var(--parchment);
     border: var(--rule);
     border-radius: 5px;
@@ -630,20 +631,36 @@ html, body { margin: 0; padding: 0; background-color: transparent; }
             open = dot;
 
             var wb = wrap.getBoundingClientRect();
+            var rb = root.getBoundingClientRect();
             var db = dot.getBoundingClientRect();
+            var PAD = 6;
+
+            pop.style.width = "";
+            var avail = rb.width - PAD * 2;
+            if (pop.offsetWidth > avail) pop.style.width = avail + "px";
+
             var pw = pop.offsetWidth;
             var ph = pop.offsetHeight;
             var cx = db.left - wb.left + db.width / 2;
             var cy = db.top - wb.top;
 
-            var left = Math.max(0, Math.min(cx - pw / 2, wrap.clientWidth - pw));
+            var minLeft = rb.left + PAD - wb.left;
+            var maxLeft = rb.right - PAD - wb.left - pw;
+            var left = Math.max(minLeft, Math.min(cx - pw / 2, Math.max(minLeft, maxLeft)));
+
             var above = cy - ph - 10 >= 0;
+            var top = above ? cy - ph - 10 : cy + db.height + 10;
+            var minTop = rb.top + PAD - wb.top;
+            var maxTop = rb.bottom - PAD - wb.top - ph;
+            top = Math.max(minTop, Math.min(top, Math.max(minTop, maxTop)));
+
             pop.style.left = left + "px";
-            pop.style.top = (above ? cy - ph - 10 : cy + db.height + 10) + "px";
+            pop.style.top = top + "px";
 
             arrow.style.left = Math.max(10, Math.min(cx - left - 5, pw - 20)) + "px";
-            arrow.style.top = above ? (ph - 5) + "px" : "-5px";
-            arrow.style.transform = above ? "rotate(225deg)" : "rotate(45deg)";
+            var pointsUp = top > cy;
+            arrow.style.top = pointsUp ? "-5px" : (ph - 5) + "px";
+            arrow.style.transform = pointsUp ? "rotate(45deg)" : "rotate(225deg)";
         }
 
         grid.addEventListener("click", function (e) {
