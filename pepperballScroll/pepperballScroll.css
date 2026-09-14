@@ -1,6 +1,5 @@
 #iap-pepperball-scroll {
-    --navy: #14243F;
-    --ground: var(--navy);
+    --ground: transparent;
     --rule: rgba(255, 255, 255, 0.22);
     --year: rgba(255, 255, 255, 0.5);
     --accent: #FFFFFF;
