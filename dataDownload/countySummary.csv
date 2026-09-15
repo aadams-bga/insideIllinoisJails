@@ -1,1 +1,103 @@
-
+countyName,capacity,jailCityName,fips_population,usda_rucc,usda_classification,peer_group,has_jail,incidents,incidents_per_10k,deaths,deaths_counted_by_state,deaths_never_counted
+Adams,194,Quincy,64109,5,"Nonmetro - Urban population of 20,000 or more, not adjacent to a metro area",nonmetro-urban,yes,129,20.1,1,1,0
+Alexander,,,4594,3,"Metro - Counties in metro areas of fewer than 250,000 population",metro,no,0,0,0,0,0
+Bond,22,Greenville,16576,1,Metro - Counties in metro areas of 1 million population or more,metro,yes,4,2.4,0,0,0
+Boone,128,Belvidere,53313,2,"Metro - Counties in metro areas of 250,000 to 1 million population",metro,yes,46,8.6,0,0,0
+Brown,,,6307,9,"Nonmetro - Urban population of fewer than 5,000, not adjacent to a metro area",rural,no,0,0,0,0,0
+Bureau,115,Princeton,32486,7,"Nonmetro - Urban population of 5,000 to 20,000, not adjacent to a metro area",rural,yes,4,1.2,0,0,0
+Calhoun,,,4224,1,Metro - Counties in metro areas of 1 million population or more,metro,yes,0,0,0,0,0
+Carroll,25,Mount Carroll,15444,9,"Nonmetro - Urban population of fewer than 5,000, not adjacent to a metro area",rural,yes,12,7.8,0,0,0
+Cass,,,12713,6,"Nonmetro - Urban population of 5,000 to 20,000, adjacent to a metro area",nonmetro-urban,no,0,0,0,0,0
+Champaign,113,Urbana,212374,3,"Metro - Counties in metro areas of fewer than 250,000 population",metro,yes,117,5.5,3,2,1
+Christian,58,Taylorville,33247,6,"Nonmetro - Urban population of 5,000 to 20,000, adjacent to a metro area",nonmetro-urban,yes,21,6.3,1,0,1
+Clark,50,Marshall,15076,8,"Nonmetro - Urban population of fewer than 5,000, adjacent to a metro area",rural,yes,2,1.3,0,0,0
+Clay,17,Louisville,12821,9,"Nonmetro - Urban population of fewer than 5,000, not adjacent to a metro area",rural,yes,5,3.9,0,0,0
+Clinton,53,Carlyle,37087,1,Metro - Counties in metro areas of 1 million population or more,metro,yes,156,42.1,0,0,0
+Coles,171,Charleston,46423,5,"Nonmetro - Urban population of 20,000 or more, not adjacent to a metro area",nonmetro-urban,yes,225,48.5,1,1,0
+Cook,9075,Chicago,5182617,1,Metro - Counties in metro areas of 1 million population or more,metro,yes,13192,25.5,85,77,8
+Crawford,45,Robinson,18388,6,"Nonmetro - Urban population of 5,000 to 20,000, adjacent to a metro area",nonmetro-urban,yes,13,7.1,0,0,0
+Cumberland,30,Toledo,10305,9,"Nonmetro - Urban population of fewer than 5,000, not adjacent to a metro area",rural,yes,5,4.9,2,1,1
+De Witt,86,Clinton,15319,6,"Nonmetro - Urban population of 5,000 to 20,000, adjacent to a metro area",nonmetro-urban,yes,80,52.2,0,0,0
+DeKalb,147,Sycamore,101335,1,Metro - Counties in metro areas of 1 million population or more,metro,yes,187,18.5,1,1,0
+Douglas,36,Tuscola,19824,8,"Nonmetro - Urban population of fewer than 5,000, adjacent to a metro area",rural,yes,0,0,0,0,0
+DuPage,973,Wheaton,937142,1,Metro - Counties in metro areas of 1 million population or more,metro,yes,736,7.9,10,7,3
+Edgar,43,Paris,16398,6,"Nonmetro - Urban population of 5,000 to 20,000, adjacent to a metro area",nonmetro-urban,yes,29,17.7,0,0,0
+Edwards,,,5984,9,"Nonmetro - Urban population of fewer than 5,000, not adjacent to a metro area",rural,no,0,0,0,0,0
+Effingham,58,Effingham,34602,7,"Nonmetro - Urban population of 5,000 to 20,000, not adjacent to a metro area",rural,yes,35,10.1,0,0,0
+Fayette,60,Vandalia,21157,6,"Nonmetro - Urban population of 5,000 to 20,000, adjacent to a metro area",nonmetro-urban,yes,25,11.8,1,0,1
+Ford,61,Paxton,13451,3,"Metro - Counties in metro areas of fewer than 250,000 population",metro,yes,0,0,0,0,0
+Franklin,98,Benton,37033,7,"Nonmetro - Urban population of 5,000 to 20,000, not adjacent to a metro area",rural,yes,15,4.1,0,0,0
+Fulton,80,Lewistown,32510,6,"Nonmetro - Urban population of 5,000 to 20,000, adjacent to a metro area",nonmetro-urban,yes,187,57.5,1,0,1
+Gallatin,,,4690,8,"Nonmetro - Urban population of fewer than 5,000, adjacent to a metro area",rural,no,0,0,0,0,0
+Greene,21,Carrollton,11417,8,"Nonmetro - Urban population of fewer than 5,000, adjacent to a metro area",rural,yes,2,1.8,0,0,0
+Grundy,63,Morrison,53835,1,Metro - Counties in metro areas of 1 million population or more,metro,yes,16,3,0,0,0
+Hamilton,,,7818,9,"Nonmetro - Urban population of fewer than 5,000, not adjacent to a metro area",rural,no,0,0,0,0,0
+Hancock,54,Carthage,17008,9,"Nonmetro - Urban population of fewer than 5,000, not adjacent to a metro area",rural,yes,2,1.2,1,1,0
+Hardin,6,Elizabethtown,3550,9,"Nonmetro - Urban population of fewer than 5,000, not adjacent to a metro area",rural,yes,1,2.8,0,0,0
+Henderson,10,Oquawka,6048,9,"Nonmetro - Urban population of fewer than 5,000, not adjacent to a metro area",rural,yes,2,3.3,0,0,0
+Henry,132,Cambridge,48177,2,"Metro - Counties in metro areas of 250,000 to 1 million population",metro,yes,0,0,1,1,0
+Iroquois,65,Watseka,26067,8,"Nonmetro - Urban population of fewer than 5,000, adjacent to a metro area",rural,yes,20,7.7,3,3,0
+Jackson,192,Murpheysboro,53199,5,"Nonmetro - Urban population of 20,000 or more, not adjacent to a metro area",nonmetro-urban,yes,82,15.4,2,1,1
+Jasper,30,Newton,9092,9,"Nonmetro - Urban population of fewer than 5,000, not adjacent to a metro area",rural,yes,6,6.6,0,0,0
+Jefferson,246,Vernon,36107,7,"Nonmetro - Urban population of 5,000 to 20,000, not adjacent to a metro area",rural,yes,154,42.7,3,1,2
+Jersey,43,Jerseyville,21150,1,Metro - Counties in metro areas of 1 million population or more,metro,yes,35,16.5,0,0,0
+Jo Daviess,27,Galena,21528,8,"Nonmetro - Urban population of fewer than 5,000, adjacent to a metro area",rural,yes,11,5.1,0,0,0
+Johnson,,,13320,8,"Nonmetro - Urban population of fewer than 5,000, adjacent to a metro area",rural,no,0,0,0,0,0
+Kane,640,Charles,520997,1,Metro - Counties in metro areas of 1 million population or more,metro,yes,1447,27.8,2,1,1
+Kankakee,488,Kankakee,106410,3,"Metro - Counties in metro areas of fewer than 250,000 population",metro,yes,30,2.8,6,4,2
+Kendall,107,Yorkville,143171,1,Metro - Counties in metro areas of 1 million population or more,metro,yes,31,2.2,1,0,1
+Knox,128,Galesburg,48716,4,"Nonmetro - Urban population of 20,000 or more, adjacent to a metro area",nonmetro-urban,yes,66,13.5,2,1,1
+Lake,660,Waukegan,718604,1,Metro - Counties in metro areas of 1 million population or more,metro,yes,2644,36.8,7,7,0
+LaSalle,306,Ottawa,108390,4,"Nonmetro - Urban population of 20,000 or more, adjacent to a metro area",nonmetro-urban,yes,90,8.3,3,2,1
+Lawrence,21,Lawrenceville,14801,9,"Nonmetro - Urban population of fewer than 5,000, not adjacent to a metro area",rural,yes,16,10.8,0,0,0
+Lee,94,Dixon,33544,6,"Nonmetro - Urban population of 5,000 to 20,000, adjacent to a metro area",nonmetro-urban,yes,6,1.8,2,0,2
+Livingston,179,Pontiac,35375,6,"Nonmetro - Urban population of 5,000 to 20,000, adjacent to a metro area",nonmetro-urban,yes,57,16.1,1,0,1
+Logan,48,Lincoln,27518,6,"Nonmetro - Urban population of 5,000 to 20,000, adjacent to a metro area",nonmetro-urban,yes,25,9.1,0,0,0
+Macon,402,Decatur,100737,3,"Metro - Counties in metro areas of fewer than 250,000 population",metro,yes,468,46.5,2,1,1
+Macoupin,93,Carlinville,43895,1,Metro - Counties in metro areas of 1 million population or more,metro,yes,153,34.9,1,1,0
+Madison,328,Edwardsville,263017,1,Metro - Counties in metro areas of 1 million population or more,metro,yes,1356,51.6,8,3,5
+Marion,116,Salem,36437,7,"Nonmetro - Urban population of 5,000 to 20,000, not adjacent to a metro area",rural,yes,39,10.7,3,2,1
+Marshall,16,Lacon,11552,2,"Metro - Counties in metro areas of 250,000 to 1 million population",metro,yes,3,2.6,1,1,0
+Mason,44,Havana,12543,8,"Nonmetro - Urban population of fewer than 5,000, adjacent to a metro area",rural,yes,10,8,0,0,0
+Massac,40,Metropolis,13627,3,"Metro - Counties in metro areas of fewer than 250,000 population",metro,yes,1,0.7,2,1,1
+McDonough,58,Macomb,26662,7,"Nonmetro - Urban population of 5,000 to 20,000, not adjacent to a metro area",rural,yes,2,0.8,1,1,0
+McHenry,650,Woodstock,315959,1,Metro - Counties in metro areas of 1 million population or more,metro,yes,436,13.8,6,4,2
+McLean,455,Bloomington,172069,3,"Metro - Counties in metro areas of fewer than 250,000 population",metro,yes,92,5.3,1,1,0
+Menard,26,Petersburg,11963,3,"Metro - Counties in metro areas of fewer than 250,000 population",metro,yes,7,5.9,0,0,0
+Mercer,102,Aledo,15292,2,"Metro - Counties in metro areas of 250,000 to 1 million population",metro,yes,2,1.3,0,0,0
+Monroe,42,Waterloo,34969,1,Metro - Counties in metro areas of 1 million population or more,metro,yes,21,6,1,1,0
+Montgomery,42,Hillsboro,27615,6,"Nonmetro - Urban population of 5,000 to 20,000, adjacent to a metro area",nonmetro-urban,yes,5,1.8,2,1,1
+Morgan,65,Jacksonville,32618,4,"Nonmetro - Urban population of 20,000 or more, adjacent to a metro area",nonmetro-urban,yes,67,20.5,1,1,0
+Moultrie,58,Sullivan,14365,8,"Nonmetro - Urban population of fewer than 5,000, adjacent to a metro area",rural,yes,10,7,0,0,0
+Ogle,162,Oregon,51345,6,"Nonmetro - Urban population of 5,000 to 20,000, adjacent to a metro area",nonmetro-urban,yes,59,11.5,0,0,0
+Peoria,492,Peoria,179630,2,"Metro - Counties in metro areas of 250,000 to 1 million population",metro,yes,1954,108.8,7,5,2
+Perry,56,Pinckneyville,20272,7,"Nonmetro - Urban population of 5,000 to 20,000, not adjacent to a metro area",rural,yes,14,6.9,0,0,0
+Piatt,77,Monticello,16628,3,"Metro - Counties in metro areas of fewer than 250,000 population",metro,yes,3,1.8,0,0,0
+Pike,60,Pittsfield,14258,9,"Nonmetro - Urban population of fewer than 5,000, not adjacent to a metro area",rural,yes,8,5.6,1,0,1
+Pope,,,3703,8,"Nonmetro - Urban population of fewer than 5,000, adjacent to a metro area",rural,no,0,0,0,0,0
+Pulaski,205,Ullin,4879,8,"Nonmetro - Urban population of fewer than 5,000, adjacent to a metro area",rural,yes,5,10.2,6,2,4
+Putnam,5,Hennepin,5633,8,"Nonmetro - Urban population of fewer than 5,000, adjacent to a metro area",rural,yes,0,0,0,0,0
+Randolph,44,Chester,29903,6,"Nonmetro - Urban population of 5,000 to 20,000, adjacent to a metro area",nonmetro-urban,yes,0,0,1,1,0
+Richland,63,Olney,15362,7,"Nonmetro - Urban population of 5,000 to 20,000, not adjacent to a metro area",rural,yes,4,2.6,1,1,0
+Rock Island,325,Rock Island,142731,2,"Metro - Counties in metro areas of 250,000 to 1 million population",metro,yes,148,10.4,1,1,0
+Saline,108,Harrisburg,22826,7,"Nonmetro - Urban population of 5,000 to 20,000, not adjacent to a metro area",rural,yes,8,3.5,2,1,1
+Sangamon,314,Springfield,194345,3,"Metro - Counties in metro areas of fewer than 250,000 population",metro,yes,1441,74.1,4,2,2
+Schuyler,21,Rushville,6750,9,"Nonmetro - Urban population of fewer than 5,000, not adjacent to a metro area",rural,yes,30,44.4,0,0,0
+Scott,,,4880,9,"Nonmetro - Urban population of fewer than 5,000, not adjacent to a metro area",rural,no,0,0,0,0,0
+Shelby,26,Shelbyville,20542,8,"Nonmetro - Urban population of fewer than 5,000, adjacent to a metro area",rural,yes,3,1.5,2,2,0
+St. Clair,422,Belleville,251149,1,Metro - Counties in metro areas of 1 million population or more,metro,yes,573,22.8,8,4,4
+Stark,,,5272,2,"Metro - Counties in metro areas of 250,000 to 1 million population",metro,yes,1,1.9,2,2,0
+Stephenson,216,Freeport,43088,4,"Nonmetro - Urban population of 20,000 or more, adjacent to a metro area",nonmetro-urban,yes,160,37.1,0,0,0
+Tazewell,236,Pekin,129821,2,"Metro - Counties in metro areas of 250,000 to 1 million population",metro,yes,285,22,4,3,1
+Union,,,16886,6,"Nonmetro - Urban population of 5,000 to 20,000, adjacent to a metro area",nonmetro-urban,no,0,0,0,0,0
+Vermilion,390,Danville,71106,4,"Nonmetro - Urban population of 20,000 or more, adjacent to a metro area",nonmetro-urban,yes,83,11.7,7,5,2
+Wabash,20,Carmel,10979,7,"Nonmetro - Urban population of 5,000 to 20,000, not adjacent to a metro area",rural,yes,2,1.8,0,0,0
+Warren,22,Monmouth,16217,6,"Nonmetro - Urban population of 5,000 to 20,000, adjacent to a metro area",nonmetro-urban,yes,10,6.2,0,0,0
+Washington,30,Nashville,13535,8,"Nonmetro - Urban population of fewer than 5,000, adjacent to a metro area",rural,yes,16,11.8,0,0,0
+Wayne,28,Fairfield,15928,9,"Nonmetro - Urban population of fewer than 5,000, not adjacent to a metro area",rural,yes,10,6.3,0,0,0
+White,78,Carmi,13395,6,"Nonmetro - Urban population of 5,000 to 20,000, adjacent to a metro area",nonmetro-urban,yes,7,5.2,1,0,1
+Whiteside,129,Morrison,54657,4,"Nonmetro - Urban population of 20,000 or more, adjacent to a metro area",nonmetro-urban,yes,6,1.1,3,3,0
+Will,909,Joliet,708583,1,Metro - Counties in metro areas of 1 million population or more,metro,yes,652,9.2,9,8,1
+Williamson,240,Marion,67064,5,"Nonmetro - Urban population of 20,000 or more, not adjacent to a metro area",nonmetro-urban,yes,353,52.6,1,1,0
+Winnebago,1324,Rockford,283790,2,"Metro - Counties in metro areas of 250,000 to 1 million population",metro,yes,488,17.2,8,3,5
+Woodford,86,Eureka,38290,2,"Metro - Counties in metro areas of 250,000 to 1 million population",metro,yes,0,0,1,1,0
