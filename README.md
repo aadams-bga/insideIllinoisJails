@@ -75,3 +75,30 @@ Change id and the slug portion of the src url
 <iframe id="inCustodyDeaths"     src="https://aadams-bga.github.io/insideIllinoisJails/inCustodyDeaths/"     height="913" loading="lazy" scrolling="no" frameborder="0" style="display:block;width:100%;border:0;overflow:hidden"></iframe>
 <iframe id="countyLineTransfer"  src="https://aadams-bga.github.io/insideIllinoisJails/countyLineTransfer/"  height="940" loading="lazy" scrolling="no" frameborder="0" style="display:block;width:100%;border:0;overflow:hidden"></iframe>
 ```
+
+**Where the data lives**
+
+Each graphic folder holds the CSV that graphic reads at runtime, named after the folder. The footer's "Download the data" link points at that file, so a reader downloads exactly what they are looking at.
+
+`dataDownload/` is separate. It holds combined datasets for readers who want the whole thing rather than one chart's slice, and no graphic reads from it.
+
+```
+incidentsMain/
+  index.html              <- fetches incidentsMain.csv at runtime
+  incidentsMain.csv       <- the data behind this graphic
+
+inCustodyDeaths/
+  index.html
+  embed.html              <- fragment version for a custom HTML block
+  inCustodyDeaths.csv
+  photos/                 <- portraits shown in the popups
+
+pepperballScroll/
+  pepperballScroll.css    <- external so edits reach live embeds
+  pepperballScroll.js
+  pepperballScroll.csv
+  embed-external.html     <- paste this one into WordPress
+
+geo/                      <- shared basemaps, used by the three maps
+dataDownload/             <- combined datasets for readers, not read by any graphic
+```
