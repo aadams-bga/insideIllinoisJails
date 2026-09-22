@@ -88,21 +88,37 @@
         flex: 0 0 auto;
     }
 
-    .toggle-btn {
-        font-family: "Halyard Text", "halyard-text", "Inter", Arial, sans-serif;
-        font-size: 12px;
-        font-weight: 600;
+    #chart-legend .legend-toggle {
+        font: inherit;
+        line-height: inherit;
         color: #574F54;
-        background: #FFFFFF;
-        border: 1px solid #B9B0AB;
-        border-radius: 3px;
-        padding: 6px 11px;
+        background: none;
+        border: 0;
+        padding: 0;
         cursor: pointer;
-        margin-bottom: 14px;
+        -webkit-appearance: none;
+        appearance: none;
     }
-    .toggle-btn:hover { border-color: #574F54; color: #1F161A; }
-    .toggle-btn:focus-visible { outline: 2px solid #53646D; outline-offset: 2px; }
-    #chart-legend .legend-item.is-off { opacity: 0.35; }
+    #chart-legend .legend-toggle .toggle-label {
+        text-decoration: underline;
+        text-decoration-color: #B9B0AB;
+        text-underline-offset: 3px;
+    }
+    #chart-legend .legend-toggle[aria-pressed="true"] .toggle-label {
+        text-decoration-color: transparent;
+    }
+    #chart-legend .legend-toggle:hover { color: #1F161A; }
+    #chart-legend .legend-toggle:hover .toggle-label,
+    #chart-legend .legend-toggle[aria-pressed="true"]:hover .toggle-label { text-decoration-color: #574F54; }
+    #chart-legend .legend-toggle:focus-visible { outline: 2px solid #53646D; outline-offset: 3px; }
+    #chart-legend .legend-toggle .legend-swatch {
+        background: transparent;
+        border: 1px dashed #B9B0AB;
+    }
+    #chart-legend .legend-toggle[aria-pressed="true"] .legend-swatch {
+        background: #D8D2CC;
+        border: 1px solid rgba(31, 22, 26, 0.18);
+    }
     #chart-container {
         position: relative;
         width: 100%;
@@ -210,10 +226,8 @@
 
     <div id="chart-legend">
         <span class="legend-item"><span class="legend-swatch" style="background:#8A2C38"></span>Deaths in Cook County</span>
-        <span class="legend-item"><span class="legend-swatch" style="background:#D8D2CC"></span>Deaths outside Cook County</span>
+        <button type="button" class="legend-item legend-toggle" id="toggle-outside" aria-pressed="false"><span class="legend-swatch"></span><span class="toggle-label">View deaths outside Cook County</span></button>
     </div>
-
-    <button type="button" class="toggle-btn" id="toggle-outside" aria-pressed="false">Add deaths outside Cook County</button>
 
     <div id="chart-wrapper" style="position: relative;">
         <div id="chart-container">
@@ -321,12 +335,13 @@
         window.addEventListener("resize", render);
 
         const btn = document.getElementById("toggle-outside");
+        const btnLabel = btn.querySelector(".toggle-label");
         btn.addEventListener("click", function () {
             showOutside = !showOutside;
             btn.setAttribute("aria-pressed", showOutside ? "true" : "false");
-            btn.textContent = showOutside
-                ? "Show Cook County only"
-                : "Add deaths outside Cook County";
+            btnLabel.textContent = showOutside
+                ? "Deaths outside Cook County"
+                : "View deaths outside Cook County";
             render();
         });
     });
@@ -407,10 +422,6 @@
                 .attr("height", d => innerHeight - y(d.other))
                 .attr("fill", GRAY_LIGHT);
         }
-
-        d3.selectAll("#chart-legend .legend-item")
-            .filter((d, i) => i === 1)
-            .classed("is-off", !showOutside);
 
         g.append("line").attr("class", "axis-line").attr("x1", 0).attr("x2", innerWidth).attr("y1", innerHeight).attr("y2", innerHeight);
 
