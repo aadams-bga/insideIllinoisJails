@@ -88,6 +88,21 @@
         flex: 0 0 auto;
     }
 
+    .toggle-btn {
+        font-family: "Halyard Text", "halyard-text", "Inter", Arial, sans-serif;
+        font-size: 12px;
+        font-weight: 600;
+        color: #574F54;
+        background: #FFFFFF;
+        border: 1px solid #B9B0AB;
+        border-radius: 3px;
+        padding: 6px 11px;
+        cursor: pointer;
+        margin-bottom: 14px;
+    }
+    .toggle-btn:hover { border-color: #574F54; color: #1F161A; }
+    .toggle-btn:focus-visible { outline: 2px solid #53646D; outline-offset: 2px; }
+    #chart-legend .legend-item.is-off { opacity: 0.35; }
     #chart-container {
         position: relative;
         width: 100%;
@@ -190,13 +205,15 @@
 
 <div id="chart-container-wrapper">
 
-    <h1>Lorem ipsum dolor sit amet consectetur adipiscing elit sed custody</h1>
-    <p class="subtitle">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.</p>
+    <h1>Deaths at the Cook County jail spiked in 2023</h1>
+    <p class="subtitle">Between 2019 and 2025, 85 people died while in the custody of the Cook County sheriff, representing a significant portion of all in-custody deaths in Illinois. Deaths since then have remained below their 2019 through 2022 average.</p>
 
     <div id="chart-legend">
         <span class="legend-item"><span class="legend-swatch" style="background:#8A2C38"></span>Deaths in Cook County</span>
         <span class="legend-item"><span class="legend-swatch" style="background:#D8D2CC"></span>Deaths outside Cook County</span>
     </div>
+
+    <button type="button" class="toggle-btn" id="toggle-outside" aria-pressed="false">Add deaths outside Cook County</button>
 
     <div id="chart-wrapper" style="position: relative;">
         <div id="chart-container">
@@ -290,6 +307,7 @@
     ];
 
     let data = null;
+    let showOutside = false;
 
     d3.csv("cookCountyDeaths.csv", function (d) {
         const year = num(d.year);
@@ -301,6 +319,16 @@
         data = rows.sort((a, b) => a.year - b.year);
         render();
         window.addEventListener("resize", render);
+
+        const btn = document.getElementById("toggle-outside");
+        btn.addEventListener("click", function () {
+            showOutside = !showOutside;
+            btn.setAttribute("aria-pressed", showOutside ? "true" : "false");
+            btn.textContent = showOutside
+                ? "Show Cook County only"
+                : "Add deaths outside Cook County";
+            render();
+        });
     });
 
     function render() {
@@ -326,9 +354,9 @@
             .padding(0.24);
 
         const xSub = d3.scaleBand()
-            .domain(["cook", "other"])
+            .domain(showOutside ? ["cook", "other"] : ["cook"])
             .range([0, x.bandwidth()])
-            .padding(0.14);
+            .padding(showOutside ? 0.14 : 0);
 
         const y = d3.scaleLinear()
             .domain([0, d3.max(data, d => Math.max(d.cook, d.other))])
@@ -371,12 +399,18 @@
             .attr("height", d => innerHeight - y(d.cook))
             .attr("fill", MAROON);
 
-        bars.append("rect")
-            .attr("x", d => x(d.year) + xSub("other"))
-            .attr("y", d => y(d.other))
-            .attr("width", xSub.bandwidth())
-            .attr("height", d => innerHeight - y(d.other))
-            .attr("fill", GRAY_LIGHT);
+        if (showOutside) {
+            bars.append("rect")
+                .attr("x", d => x(d.year) + xSub("other"))
+                .attr("y", d => y(d.other))
+                .attr("width", xSub.bandwidth())
+                .attr("height", d => innerHeight - y(d.other))
+                .attr("fill", GRAY_LIGHT);
+        }
+
+        d3.selectAll("#chart-legend .legend-item")
+            .filter((d, i) => i === 1)
+            .classed("is-off", !showOutside);
 
         g.append("line").attr("class", "axis-line").attr("x1", 0).attr("x2", innerWidth).attr("y1", innerHeight).attr("y2", innerHeight);
 
