@@ -195,7 +195,7 @@
 
     <div id="chart-legend">
         <span class="legend-item"><span class="legend-swatch" style="background:#8A2C38"></span>Deaths in Cook County</span>
-        <span class="legend-item"><span class="legend-swatch" style="background:#CBC4BE"></span>Deaths outside Cook County</span>
+        <span class="legend-item"><span class="legend-swatch" style="background:#D8D2CC"></span>Deaths outside Cook County</span>
     </div>
 
     <div id="chart-wrapper" style="position: relative;">
@@ -214,7 +214,7 @@
 (function () {
     const MAROON = "#8A2C38";
     const STEEL = "#53646D";
-    const GRAY_LIGHT = "#CBC4BE";
+    const GRAY_LIGHT = "#D8D2CC";
     const AMBER = "#C06621";
     const SAGE = "#353B32";
     const INK = "#1F161A";
@@ -325,8 +325,13 @@
             .range([0, innerWidth])
             .padding(0.24);
 
+        const xSub = d3.scaleBand()
+            .domain(["cook", "other"])
+            .range([0, x.bandwidth()])
+            .padding(0.14);
+
         const y = d3.scaleLinear()
-            .domain([0, d3.max(data, d => d.total)])
+            .domain([0, d3.max(data, d => Math.max(d.cook, d.other))])
             .range([innerHeight, 0])
             .nice();
 
@@ -360,18 +365,18 @@
             .append("g");
 
         bars.append("rect")
-            .attr("x", d => x(d.year))
-            .attr("y", d => y(d.other))
-            .attr("width", x.bandwidth())
-            .attr("height", d => innerHeight - y(d.other))
-            .attr("fill", GRAY_LIGHT);
+            .attr("x", d => x(d.year) + xSub("cook"))
+            .attr("y", d => y(d.cook))
+            .attr("width", xSub.bandwidth())
+            .attr("height", d => innerHeight - y(d.cook))
+            .attr("fill", MAROON);
 
         bars.append("rect")
-            .attr("x", d => x(d.year))
-            .attr("y", d => y(d.total))
-            .attr("width", x.bandwidth())
-            .attr("height", d => y(d.other) - y(d.total))
-            .attr("fill", MAROON);
+            .attr("x", d => x(d.year) + xSub("other"))
+            .attr("y", d => y(d.other))
+            .attr("width", xSub.bandwidth())
+            .attr("height", d => innerHeight - y(d.other))
+            .attr("fill", GRAY_LIGHT);
 
         g.append("line").attr("class", "axis-line").attr("x1", 0).attr("x2", innerWidth).attr("y1", innerHeight).attr("y2", innerHeight);
 
